@@ -1,5 +1,6 @@
 package citasmedicas.service.impl;
 
+import citasmedicas.exceptions.MenuException;
 import citasmedicas.model.Menu;
 import citasmedicas.repository.MenuRepository;
 import citasmedicas.service.MenuService;
@@ -13,6 +14,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Autowired
     private MenuRepository repository;
+
     @Override
     public List<Menu> obtenerMenus() {
         return repository.findAll();
@@ -20,6 +22,16 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public Menu guardar(Menu menu) {
+        validarDatos(menu);
         return repository.save(menu);
+    }
+
+    private void validarDatos(Menu menu) {
+        if (menu.getNombre().equals("")) {
+            throw new MenuException(MenuException.NOMBRE_NO_VALIDO);
+        }
+        if (menu.getRuta().equals("")) {
+            throw new MenuException(MenuException.RUTA_NO_VALIDA);
+        }
     }
 }
