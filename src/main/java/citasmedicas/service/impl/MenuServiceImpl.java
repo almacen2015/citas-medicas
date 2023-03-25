@@ -36,7 +36,7 @@ public class MenuServiceImpl implements MenuService {
             menuActualizar.setRuta("/".concat(menu.getRuta()));
             menuActualizar.setIcon(menu.getIcon());
             menuActualizar.setCodigo(menuConsultado.get().getCodigo());
-            repository.save(menuActualizar);
+            return Optional.of(repository.save(menuActualizar));
         }
         return Optional.empty();
     }
