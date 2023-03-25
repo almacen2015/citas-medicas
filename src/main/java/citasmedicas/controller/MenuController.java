@@ -16,12 +16,22 @@ public class MenuController {
     private MenuService service;
 
     @GetMapping
-    public ResponseEntity<?> listar(){
+    public ResponseEntity<?> listar() {
         return new ResponseEntity<>(service.obtenerMenus(), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<?> guardar(@RequestBody Menu menu){
-        return new ResponseEntity<>(service.guardar(menu), HttpStatus.OK);
+    public ResponseEntity<?> guardar(@RequestBody Menu menu) {
+        return new ResponseEntity<>(service.guardar(menu), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizar(@RequestBody Menu menu, @PathVariable Integer id) {
+        return new ResponseEntity<>(service.actualizar(menu, id), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public void eliminar(@PathVariable Integer id) {
+        service.eliminar(id);
     }
 }

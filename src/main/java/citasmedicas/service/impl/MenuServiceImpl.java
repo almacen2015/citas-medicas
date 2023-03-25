@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MenuServiceImpl implements MenuService {
@@ -24,6 +25,25 @@ public class MenuServiceImpl implements MenuService {
     public Menu guardar(Menu menu) {
         validarDatos(menu);
         return repository.save(menu);
+    }
+
+    @Override
+    public Optional<Menu> actualizar(Menu menu, Integer id) {
+        Optional<Menu> menuConsultado = repository.findById(id);
+        if (menuConsultado.isPresent()) {
+            Menu menuActualizar = new Menu();
+            menuActualizar.setNombre(menu.getNombre());
+            menuActualizar.setRuta("/".concat(menu.getRuta()));
+            menuActualizar.setIcon(menu.getIcon());
+            menuActualizar.setCodigo(menuConsultado.get().getCodigo());
+            repository.save(menuActualizar);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public void eliminar(Integer id) {
+        repository.deleteById(id);
     }
 
     private void validarDatos(Menu menu) {
