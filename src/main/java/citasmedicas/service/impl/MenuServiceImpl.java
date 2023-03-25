@@ -46,6 +46,16 @@ public class MenuServiceImpl implements MenuService {
         repository.deleteById(id);
     }
 
+    @Override
+    public Optional<Menu> obtenerMenu(Integer id) {
+        Optional<Menu> menuConsultado = repository.findById(id);
+        if (menuConsultado.isPresent()) {
+            return menuConsultado;
+        } else {
+            throw new MenuException(MenuException.MENU_NO_ENCONTRADO);
+        }
+    }
+
     private void validarDatos(Menu menu) {
         if (menu.getNombre().equals("")) {
             throw new MenuException(MenuException.NOMBRE_NO_VALIDO);

@@ -34,4 +34,10 @@ public class MenuController {
     public void eliminar(@PathVariable Integer id) {
         service.eliminar(id);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> obtenerMenu(@PathVariable Integer id) {
+        System.out.println(service.obtenerMenu(id));
+        return new ResponseEntity<>(service.obtenerMenu(id), HttpStatus.OK);
+    }
 }

@@ -13,4 +13,6 @@ public interface MenuService {
     Optional<Menu> actualizar(Menu menu, Integer id);
 
     void eliminar(Integer id);
+
+    Optional<Menu> obtenerMenu(Integer id);
 }
