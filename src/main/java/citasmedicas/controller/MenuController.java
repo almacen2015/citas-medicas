@@ -37,7 +37,6 @@ public class MenuController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerMenu(@PathVariable Integer id) {
-        System.out.println(service.obtenerMenu(id));
         return new ResponseEntity<>(service.obtenerMenu(id), HttpStatus.OK);
     }
 }
