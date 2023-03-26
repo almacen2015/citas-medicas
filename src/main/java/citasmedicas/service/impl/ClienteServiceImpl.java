@@ -80,5 +80,9 @@ public class ClienteServiceImpl implements ClienteService {
         if (cliente.getNumeroDocumento().equals("")) {
             throw new ClienteException(ClienteException.NUMERO_DOCUMENTO_NO_VALIDO);
         }
+
+        if (String.valueOf(cliente.getSexo()).equals("")) {
+            throw new ClienteException(ClienteException.SEXO_NO_VALIDO);
+        }
     }
 }

@@ -22,8 +22,8 @@ public class ExceptionsAdvice {
     public ResponseEntity<?> handleClienteException(ClienteException e) {
         return switch (e.getMessage()) {
             case "NOMBRE_NO_VALIDO", "APELLIDO_PATERNO_NO_VALIDO",
-                    "APELLIDO_MATERNO_NO_VALIDO", "NUMERO_DOCUMENTO_NO_VALIDO" ->
-                    new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+                    "APELLIDO_MATERNO_NO_VALIDO", "NUMERO_DOCUMENTO_NO_VALIDO",
+                    "SEXO_NO_VALIDO" -> new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
             case "CLIENTE_NO_ENCONTRADO" -> new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
             default -> new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         };
