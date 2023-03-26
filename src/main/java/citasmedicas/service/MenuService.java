@@ -12,7 +12,7 @@ public interface MenuService {
 
     Menu guardar(Menu menu);
 
-    Optional<Menu> actualizar(Menu menu, Integer id);
+    Menu actualizar(Menu menu, Integer id);
 
     void eliminar(Integer id);
 

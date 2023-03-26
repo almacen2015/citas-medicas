@@ -28,17 +28,18 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public Optional<Menu> actualizar(Menu menu, Integer id) {
-        Optional<Menu> menuConsultado = repository.findById(id);
+    public Menu actualizar(Menu menu, Integer id) {
+        Optional<Menu> menuConsultado = obtenerMenu(id);
         if (menuConsultado.isPresent()) {
+            validarDatos(menu);
             Menu menuActualizar = new Menu();
             menuActualizar.setNombre(menu.getNombre());
             menuActualizar.setRuta("/".concat(menu.getRuta()));
             menuActualizar.setIcon(menu.getIcon());
             menuActualizar.setCodigo(menuConsultado.get().getCodigo());
-            return Optional.of(repository.save(menuActualizar));
+            return repository.save(menuActualizar);
         }
-        return Optional.empty();
+        return null;
     }
 
     @Override
@@ -51,9 +52,8 @@ public class MenuServiceImpl implements MenuService {
         Optional<Menu> menuConsultado = repository.findById(id);
         if (menuConsultado.isPresent()) {
             return menuConsultado;
-        } else {
-            throw new MenuException(MenuException.MENU_NO_ENCONTRADO);
         }
+        throw new MenuException(MenuException.MENU_NO_ENCONTRADO);
     }
 
     private void validarDatos(Menu menu) {
