@@ -24,6 +24,8 @@ public class Cliente {
     @Column(name = "fecha_nacimiento")
     private Date fechaNacimineto;
 
+    private char sexo;
+
     private String telefono;
 
     private String email;
@@ -90,5 +92,13 @@ public class Cliente {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public char getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(char sexo) {
+        this.sexo = sexo;
     }
 }
