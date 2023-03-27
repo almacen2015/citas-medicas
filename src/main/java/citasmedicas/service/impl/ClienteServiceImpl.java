@@ -2,8 +2,10 @@ package citasmedicas.service.impl;
 
 import citasmedicas.exceptions.ClienteException;
 import citasmedicas.model.Cliente;
+import citasmedicas.model.dto.ClienteDTO;
 import citasmedicas.repository.ClienteRepository;
 import citasmedicas.service.ClienteService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +18,17 @@ public class ClienteServiceImpl implements ClienteService {
     @Autowired
     private ClienteRepository repository;
 
+    private ModelMapper modelMapper = new ModelMapper();
+
     @Override
     public List<Cliente> listar() {
         return repository.findAll();
     }
 
     @Override
-    public Cliente guardar(Cliente cliente) {
+    public Cliente guardar(ClienteDTO clienteDTO) {
+        validarDatos(clienteDTO);
+        Cliente cliente = modelMapper.map(clienteDTO, Cliente.class);
         return repository.save(cliente);
     }
 
@@ -36,11 +42,11 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Cliente actualizar(Cliente cliente, Integer id) {
+    public Cliente actualizar(ClienteDTO clienteDTO, Integer id) {
         Optional<Cliente> clienteConsultado = obtenerCliente(id);
         if (clienteConsultado.isPresent()) {
-            validarDatos(cliente);
-            Cliente clienteActualizar = asignarDatos(cliente, clienteConsultado);
+            validarDatos(clienteDTO);
+            Cliente clienteActualizar = asignarDatos(clienteDTO, clienteConsultado);
             return repository.save(clienteActualizar);
         }
         return null;
@@ -51,37 +57,31 @@ public class ClienteServiceImpl implements ClienteService {
         repository.deleteById(id);
     }
 
-    private Cliente asignarDatos(Cliente cliente, Optional<Cliente> clienteConsultado) {
+    private Cliente asignarDatos(ClienteDTO clienteDTO, Optional<Cliente> clienteConsultado) {
         Cliente clienteActualizar = new Cliente();
+        clienteActualizar = modelMapper.map(clienteDTO, Cliente.class);
         clienteActualizar.setId(clienteConsultado.get().getId());
-        clienteActualizar.setNombre(cliente.getNombre());
-        clienteActualizar.setApellidoPaterno(cliente.getApellidoPaterno());
-        clienteActualizar.setApellidoMaterno(cliente.getApellidoMaterno());
-        clienteActualizar.setFechaNacimineto(cliente.getFechaNacimineto());
-        clienteActualizar.setEmail(cliente.getEmail());
-        clienteActualizar.setNumeroDocumento(cliente.getNumeroDocumento());
-        clienteActualizar.setTelefono(cliente.getTelefono());
         return clienteActualizar;
     }
 
-    private void validarDatos(Cliente cliente) {
-        if (cliente.getNombre().equals("")) {
+    private void validarDatos(ClienteDTO clienteDTO) {
+        if (clienteDTO.getNombre().equals("")) {
             throw new ClienteException(ClienteException.NOMBRE_NO_VALIDO);
         }
 
-        if (cliente.getApellidoMaterno().equals("")) {
+        if (clienteDTO.getApellidoMaterno().equals("")) {
             throw new ClienteException(ClienteException.APELLIDO_MATERNO_NO_VALIDO);
         }
 
-        if (cliente.getApellidoPaterno().equals("")) {
+        if (clienteDTO.getApellidoPaterno().equals("")) {
             throw new ClienteException(ClienteException.APELLIDO_PATERNO_NO_VALIDO);
         }
 
-        if (cliente.getNumeroDocumento().equals("")) {
+        if (clienteDTO.getNumeroDocumento().equals("")) {
             throw new ClienteException(ClienteException.NUMERO_DOCUMENTO_NO_VALIDO);
         }
 
-        if (String.valueOf(cliente.getSexo()).equals("")) {
+        if (clienteDTO.getSexo().equals("")) {
             throw new ClienteException(ClienteException.SEXO_NO_VALIDO);
         }
     }

@@ -1,6 +1,6 @@
 package citasmedicas.controller;
 
-import citasmedicas.model.Cliente;
+import citasmedicas.model.dto.ClienteDTO;
 import citasmedicas.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,8 +21,8 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ResponseEntity<?> guardar(@RequestBody Cliente cliente) {
-        return new ResponseEntity<>(service.guardar(cliente), HttpStatus.CREATED);
+    public ResponseEntity<?> guardar(@RequestBody ClienteDTO clienteDTO) {
+        return new ResponseEntity<>(service.guardar(clienteDTO), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
@@ -32,8 +32,8 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@RequestBody Cliente cliente, @PathVariable Integer id) {
-        return new ResponseEntity<>(service.actualizar(cliente, id), HttpStatus.OK);
+    public ResponseEntity<?> actualizar(@RequestBody ClienteDTO clienteDTO, @PathVariable Integer id) {
+        return new ResponseEntity<>(service.actualizar(clienteDTO, id), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
