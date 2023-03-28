@@ -1,14 +1,12 @@
 package citasmedicas.model.dto;
 
-import java.util.Date;
-
 public class ClienteDTO {
     private Integer id;
     private String nombre;
     private String apellidoPaterno;
     private String apellidoMaterno;
     private String numeroDocumento;
-    private Date fechaNacimineto;
+    private String fechaNacimiento;
     private String sexo;
     private String telefono;
     private String email;
@@ -53,12 +51,12 @@ public class ClienteDTO {
         this.numeroDocumento = numeroDocumento;
     }
 
-    public Date getFechaNacimineto() {
-        return fechaNacimineto;
+    public String getFechaNacimiento() {
+        return fechaNacimiento;
     }
 
-    public void setFechaNacimineto(Date fechaNacimineto) {
-        this.fechaNacimineto = fechaNacimineto;
+    public void setFechaNacimiento(String fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
     }
 
     public String getSexo() {

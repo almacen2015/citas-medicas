@@ -22,7 +22,7 @@ public class Cliente {
     private String numeroDocumento;
 
     @Column(name = "fecha_nacimiento")
-    private Date fechaNacimineto;
+    private Date fechaNacimiento;
 
     private String sexo;
 
@@ -70,12 +70,12 @@ public class Cliente {
         this.numeroDocumento = numeroDocumento;
     }
 
-    public Date getFechaNacimineto() {
-        return fechaNacimineto;
+    public Date getFechaNacimiento() {
+        return fechaNacimiento;
     }
 
-    public void setFechaNacimineto(Date fechaNacimineto) {
-        this.fechaNacimineto = fechaNacimineto;
+    public void setFechaNacimiento(Date fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
     }
 
     public String getTelefono() {
