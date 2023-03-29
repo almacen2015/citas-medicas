@@ -9,6 +9,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,8 +23,17 @@ public class ClienteServiceImpl implements ClienteService {
     private ModelMapper modelMapper = new ModelMapper();
 
     @Override
-    public List<Cliente> listar() {
-        return repository.findAll();
+    public List<ClienteDTO> listar() {
+        List<Cliente> clientes = repository.findAll();
+        List<ClienteDTO> clienteDTOS = new ArrayList<>();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        for (Cliente cliente : clientes) {
+            String fechaStr = formatter.format(cliente.getFechaNacimiento());
+            ClienteDTO clienteDTO = modelMapper.map(cliente, ClienteDTO.class);
+            clienteDTO.setFechaNacimiento(fechaStr);
+            clienteDTOS.add(clienteDTO);
+        }
+        return clienteDTOS;
     }
 
     @Override

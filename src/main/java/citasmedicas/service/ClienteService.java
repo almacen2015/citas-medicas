@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Transactional(rollbackFor = Exception.class)
 public interface ClienteService {
-    List<Cliente> listar();
+    List<ClienteDTO> listar();
 
     Cliente guardar(ClienteDTO clienteDTO);
 
