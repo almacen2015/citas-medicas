@@ -44,17 +44,17 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Optional<Cliente> obtenerCliente(Integer id) {
+    public Optional<ClienteDTO> obtenerCliente(Integer id) {
         Optional<Cliente> clienteConsultado = repository.findById(id);
         if (clienteConsultado.isPresent()) {
-            return clienteConsultado;
+            return Optional.ofNullable(modelMapper.map(clienteConsultado, ClienteDTO.class));
         }
         throw new ClienteException(ClienteException.CLIENTE_NO_ENCONTRADO);
     }
 
     @Override
     public Cliente actualizar(ClienteDTO clienteDTO, Integer id) {
-        Optional<Cliente> clienteConsultado = obtenerCliente(id);
+        Optional<ClienteDTO> clienteConsultado = obtenerCliente(id);
         if (clienteConsultado.isPresent()) {
             validarDatos(clienteDTO);
             Cliente clienteActualizar = asignarDatos(clienteDTO, clienteConsultado);
@@ -68,7 +68,7 @@ public class ClienteServiceImpl implements ClienteService {
         repository.deleteById(id);
     }
 
-    private Cliente asignarDatos(ClienteDTO clienteDTO, Optional<Cliente> clienteConsultado) {
+    private Cliente asignarDatos(ClienteDTO clienteDTO, Optional<ClienteDTO> clienteConsultado) {
         Cliente clienteActualizar = new Cliente();
         clienteActualizar = modelMapper.map(clienteDTO, Cliente.class);
         clienteActualizar.setId(clienteConsultado.get().getId());

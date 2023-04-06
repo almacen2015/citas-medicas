@@ -13,7 +13,7 @@ public interface ClienteService {
 
     Cliente guardar(ClienteDTO clienteDTO);
 
-    Optional<Cliente> obtenerCliente(Integer id);
+    Optional<ClienteDTO> obtenerCliente(Integer id);
 
     Cliente actualizar(ClienteDTO clienteDTO, Integer id);
 
