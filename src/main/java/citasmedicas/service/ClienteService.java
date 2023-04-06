@@ -15,7 +15,7 @@ public interface ClienteService {
 
     Optional<ClienteDTO> obtenerCliente(Integer id);
 
-    Cliente actualizar(ClienteDTO clienteDTO, Integer id);
+    ClienteDTO actualizar(ClienteDTO clienteDTO, Integer id);
 
     void eliminar(Integer id);
 }

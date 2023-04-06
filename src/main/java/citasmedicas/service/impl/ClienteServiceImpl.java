@@ -53,12 +53,12 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Cliente actualizar(ClienteDTO clienteDTO, Integer id) {
+    public ClienteDTO actualizar(ClienteDTO clienteDTO, Integer id) {
         Optional<ClienteDTO> clienteConsultado = obtenerCliente(id);
         if (clienteConsultado.isPresent()) {
             validarDatos(clienteDTO);
             Cliente clienteActualizar = asignarDatos(clienteDTO, clienteConsultado);
-            return repository.save(clienteActualizar);
+            return modelMapper.map(repository.save(clienteActualizar),ClienteDTO.class);
         }
         return null;
     }
