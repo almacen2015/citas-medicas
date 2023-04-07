@@ -1,5 +1,6 @@
 package citasmedicas;
 
+import citasmedicas.exceptions.AreaException;
 import citasmedicas.exceptions.ClienteException;
 import citasmedicas.exceptions.MenuException;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,14 @@ public class ExceptionsAdvice {
                     "APELLIDO_MATERNO_NO_VALIDO", "NUMERO_DOCUMENTO_NO_VALIDO",
                     "SEXO_NO_VALIDO" -> new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
             case "CLIENTE_NO_ENCONTRADO" -> new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            default -> new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        };
+    }
+
+    @ExceptionHandler(AreaException.class)
+    public ResponseEntity<?> handleAreaException(AreaException e) {
+        return switch (e.getMessage()) {
+            case "NOMBRE_NO_VALIDO" -> new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
             default -> new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         };
     }
