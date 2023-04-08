@@ -60,7 +60,7 @@ public class AreaServiceImpl implements AreaService {
     }
 
     private Area asignarDatosActualizar(AreaDTO areaDTO, Optional<AreaDTO> areaConsultado) {
-        Area area = modelMapper.map(areaConsultado, Area.class);
+        Area area = modelMapper.map(areaDTO, Area.class);
         area.setId(areaConsultado.get().getId());
         return area;
     }
