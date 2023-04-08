@@ -58,7 +58,7 @@ public class ClienteServiceImpl implements ClienteService {
         if (clienteConsultado.isPresent()) {
             validarDatos(clienteDTO);
             Cliente clienteActualizar = asignarDatos(clienteDTO, clienteConsultado);
-            return modelMapper.map(repository.save(clienteActualizar),ClienteDTO.class);
+            return modelMapper.map(repository.save(clienteActualizar), ClienteDTO.class);
         }
         return null;
     }
@@ -94,6 +94,10 @@ public class ClienteServiceImpl implements ClienteService {
 
         if (clienteDTO.getSexo().equals("")) {
             throw new ClienteException(ClienteException.SEXO_NO_VALIDO);
+        }
+
+        if (clienteDTO.getFechaNacimiento() == null) {
+            throw new ClienteException(ClienteException.FECHA_NACIMIENTO_NO_VALIDO);
         }
     }
 }
