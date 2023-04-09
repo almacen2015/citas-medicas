@@ -1,12 +1,13 @@
 package citasmedicas.service;
 
 import citasmedicas.model.dto.AreaDTO;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
-@Transactional(rollbackOn = Exception.class)
+@Transactional(rollbackFor = Exception.class)
 public interface AreaService {
     AreaDTO guardar(AreaDTO areaDTO);
 
