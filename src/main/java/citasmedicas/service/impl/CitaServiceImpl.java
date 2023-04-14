@@ -1,5 +1,6 @@
 package citasmedicas.service.impl;
 
+import citasmedicas.exceptions.CitaException;
 import citasmedicas.model.Cita;
 import citasmedicas.model.dto.AreaDTO;
 import citasmedicas.model.dto.CitaDTO;
@@ -8,6 +9,7 @@ import citasmedicas.repository.CitaRepository;
 import citasmedicas.service.AreaService;
 import citasmedicas.service.CitaService;
 import citasmedicas.service.ClienteService;
+import citasmedicas.model.enums.Estado;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,11 +30,8 @@ public class CitaServiceImpl implements CitaService {
     @Autowired
     private ClienteService clienteService;
 
+    @Autowired
     private ModelMapper modelMapper;
-
-    public CitaServiceImpl() {
-        modelMapper = new ModelMapper();
-    }
 
     @Override
     public List<CitaDTO> listar() {
@@ -51,6 +50,26 @@ public class CitaServiceImpl implements CitaService {
 
     @Override
     public CitaDTO guardar(CitaDTO citaDTO) {
-        return null;
+        Cita cita = modelMapper.map(citaDTO, Cita.class);
+        if (existeCitaMismoClienteAreaYFecha(cita)) {
+            throw new CitaException(CitaException.EXISTE_CITA_MISMA_AREA);
+        }
+        if (existeCitaEntreRangoDeFechaYHora(cita)) {
+            throw new CitaException(CitaException.EXISTE_CITA_MISMA_HORA);
+        }
+        return modelMapper.map(repository.save(cita), CitaDTO.class);
+    }
+
+    private boolean existeCitaMismoClienteAreaYFecha(Cita cita) {
+        Integer idCliente = cita.getCliente().getId();
+        Integer idArea = cita.getArea().getId();
+        List<Cita> citas = repository.findByClienteIdAndAreaIdAndFechaInicio(idCliente, idArea, cita.getFechaInicio());
+        return !citas.isEmpty();
+    }
+
+    private boolean existeCitaEntreRangoDeFechaYHora(Cita cita) {
+        String estado = String.valueOf(Estado.Activo);
+        List<Cita> citas = repository.findCitaBetweenFechaInicioAndFechaFin(cita.getFechaInicio(), estado);
+        return !citas.isEmpty();
     }
 }

@@ -18,6 +18,7 @@ public class Cita {
     private String titulo;
     private Date fechaInicio;
     private Date fechaFin;
+    private String estado;
 
     public Integer getId() {
         return id;
@@ -65,5 +66,13 @@ public class Cita {
 
     public void setArea(Area area) {
         this.area = area;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }

@@ -1,6 +1,7 @@
 package citasmedicas;
 
 import citasmedicas.exceptions.AreaException;
+import citasmedicas.exceptions.CitaException;
 import citasmedicas.exceptions.ClienteException;
 import citasmedicas.exceptions.MenuException;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,15 @@ public class ExceptionsAdvice {
     public ResponseEntity<?> handleAreaException(AreaException e) {
         return switch (e.getMessage()) {
             case "NOMBRE_NO_VALIDO" -> new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            default -> new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        };
+    }
+
+    @ExceptionHandler(CitaException.class)
+    public ResponseEntity<?> handleAreaException(CitaException e) {
+        return switch (e.getMessage()) {
+            case "EXISTE_CITA_MISMA_AREA", "EXISTE_CITA_MISMA_HORA" ->
+                    new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
             default -> new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         };
     }

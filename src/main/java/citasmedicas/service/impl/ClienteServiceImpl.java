@@ -20,7 +20,8 @@ public class ClienteServiceImpl implements ClienteService {
     @Autowired
     private ClienteRepository repository;
 
-    private ModelMapper modelMapper = new ModelMapper();
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public List<ClienteDTO> listar() {

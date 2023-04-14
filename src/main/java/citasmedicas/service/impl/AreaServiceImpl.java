@@ -19,11 +19,9 @@ public class AreaServiceImpl implements AreaService {
     @Autowired
     private AreaRepository repository;
 
+    @Autowired
     private ModelMapper modelMapper;
 
-    public AreaServiceImpl() {
-        this.modelMapper = new ModelMapper();
-    }
 
     @Override
     public AreaDTO guardar(AreaDTO areaDTO) {
