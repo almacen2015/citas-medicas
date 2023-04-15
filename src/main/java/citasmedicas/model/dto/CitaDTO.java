@@ -7,6 +7,7 @@ public class CitaDTO {
     private String titulo;
     private String fechaInicio;
     private String fechaFin;
+    private String estado;
 
     public Integer getId() {
         return id;
@@ -54,5 +55,13 @@ public class CitaDTO {
 
     public void setFechaFin(String fechaFin) {
         this.fechaFin = fechaFin;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }

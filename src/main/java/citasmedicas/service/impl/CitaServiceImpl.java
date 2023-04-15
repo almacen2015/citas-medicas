@@ -51,6 +51,7 @@ public class CitaServiceImpl implements CitaService {
     @Override
     public CitaDTO guardar(CitaDTO citaDTO) {
         Cita cita = modelMapper.map(citaDTO, Cita.class);
+        validarDatos(cita);
         if (existeCitaMismoClienteAreaYFecha(cita)) {
             throw new CitaException(CitaException.EXISTE_CITA_MISMA_AREA);
         }
@@ -58,6 +59,24 @@ public class CitaServiceImpl implements CitaService {
             throw new CitaException(CitaException.EXISTE_CITA_MISMA_HORA);
         }
         return modelMapper.map(repository.save(cita), CitaDTO.class);
+    }
+
+    private void validarDatos(Cita cita) {
+        if (cita.getTitulo().equals("")) {
+            throw new CitaException(CitaException.TITULO_NO_VALIDO);
+        }
+        if (cita.getArea() == null) {
+            throw new CitaException(CitaException.AREA_NO_VALIDO);
+        }
+        if (cita.getCliente() == null) {
+            throw new CitaException(CitaException.CLIENTE_NO_VALIDO);
+        }
+        if (cita.getFechaInicio() == null) {
+            throw new CitaException(CitaException.FECHA_INICIO_NO_VALIDO);
+        }
+        if (cita.getFechaFin() == null) {
+            throw new CitaException(CitaException.FECHA_FIN_NO_VALIDO);
+        }
     }
 
     private boolean existeCitaMismoClienteAreaYFecha(Cita cita) {

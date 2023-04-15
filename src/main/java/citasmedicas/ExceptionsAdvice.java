@@ -43,7 +43,9 @@ public class ExceptionsAdvice {
     @ExceptionHandler(CitaException.class)
     public ResponseEntity<?> handleAreaException(CitaException e) {
         return switch (e.getMessage()) {
-            case "EXISTE_CITA_MISMA_AREA", "EXISTE_CITA_MISMA_HORA" ->
+            case "EXISTE_CITA_MISMA_AREA", "EXISTE_CITA_MISMA_HORA",
+                    "TITULO_NO_VALIDO", "AREA_NO_VALIDO", "CLIENTE_NO_VALIDO",
+                    "commit", "FECHA_FIN_NO_VALIDO" ->
                     new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
             default -> new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         };
