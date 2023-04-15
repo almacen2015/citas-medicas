@@ -52,12 +52,6 @@ public class CitaServiceImpl implements CitaService {
     public CitaDTO guardar(CitaDTO citaDTO) {
         Cita cita = modelMapper.map(citaDTO, Cita.class);
         validarDatos(cita);
-        if (existeCitaMismoClienteAreaYFecha(cita)) {
-            throw new CitaException(CitaException.EXISTE_CITA_MISMA_AREA);
-        }
-        if (existeCitaEntreRangoDeFechaYHora(cita)) {
-            throw new CitaException(CitaException.EXISTE_CITA_MISMA_HORA);
-        }
         return modelMapper.map(repository.save(cita), CitaDTO.class);
     }
 
@@ -76,6 +70,12 @@ public class CitaServiceImpl implements CitaService {
         }
         if (cita.getFechaFin() == null) {
             throw new CitaException(CitaException.FECHA_FIN_NO_VALIDO);
+        }
+        if (existeCitaMismoClienteAreaYFecha(cita)) {
+            throw new CitaException(CitaException.EXISTE_CITA_MISMA_AREA);
+        }
+        if (existeCitaEntreRangoDeFechaYHora(cita)) {
+            throw new CitaException(CitaException.EXISTE_CITA_MISMA_HORA);
         }
     }
 
