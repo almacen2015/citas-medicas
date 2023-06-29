@@ -12,6 +12,14 @@ public class Area {
 
     private String nombre;
 
+    public Area() {
+    }
+
+    public Area(Integer id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+
     public Integer getId() {
         return id;
     }

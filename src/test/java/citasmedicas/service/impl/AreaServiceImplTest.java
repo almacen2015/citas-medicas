@@ -3,7 +3,7 @@ package citasmedicas.service.impl;
 import citasmedicas.model.Area;
 import citasmedicas.model.dto.AreaDTO;
 import citasmedicas.repository.AreaRepository;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -21,63 +21,47 @@ public class AreaServiceImplTest {
     private ModelMapper modelMapper;
 
     @Mock
-    private AreaRepository areaRepository;
+    private AreaRepository repository;
 
     @InjectMocks
-    private AreaServiceImpl areaService;
+    private AreaServiceImpl service;
 
-    private static Area area= new Area();
-    private static List<Area> areasMock = new ArrayList<>();
+    private static List<Area> areasMock;
 
     public AreaServiceImplTest() {
         MockitoAnnotations.openMocks(this);
     }
 
-    @BeforeAll
-    static void beforeAll() {
+    @BeforeEach
+    public void setUp() {
+        areasMock = new ArrayList<>();
 
-        area.setId(1);
-        area.setNombre("Traumatologia");
-        areasMock.add(area);
-
-        area.setId(2);
-        area.setNombre("Odontologia");
-        areasMock.add(area);
-
-        area.setId(3);
-        area.setNombre("Obstetricia");
-        areasMock.add(area);
-
-        area.setId(4);
-        area.setNombre("Enfermeria");
-        areasMock.add(area);
-
-        area.setId(5);
-        area.setNombre("Cardiologia");
-        areasMock.add(area);
-
-        area.setId(6);
-        area.setNombre("Medicina");
-        areasMock.add(area);
-
-        area.setId(7);
-        area.setNombre("Pediatria");
-        areasMock.add(area);
-
-        area.setId(8);
-        area.setNombre("Nuvea Pediatria");
-        areasMock.add(area);
+        areasMock.add(new Area(1, "Traumatologia"));
+        areasMock.add(new Area(2, "Odontologia"));
+        areasMock.add(new Area(3, "Obstetricia"));
+        areasMock.add(new Area(4, "Enfermeria"));
+        areasMock.add(new Area(5, "Cardiologia"));
+        areasMock.add(new Area(6, "Medicina"));
+        areasMock.add(new Area(7, "Pediatria"));
+        areasMock.add(new Area(8, "Nueva Pediatria"));
     }
 
     @Test
     public void listarTest() {
-        when(areaRepository.findAll()).thenReturn(areasMock);
+        when(repository.findAll()).thenReturn(areasMock);
 
-        List<AreaDTO> areas = areaService.listar();
+        List<AreaDTO> areas = service.listar();
 
-        verify(areaRepository, times(1)).findAll();
+        verify(repository, times(1)).findAll();
 
         assertEquals(areasMock.size(), areas.size());
+    }
+
+    @Test
+    void guardarTest() {
+        Area areaMock = new Area();
+        areaMock.setId(9);
+        areaMock.setNombre("Urologia");
 
     }
 }
