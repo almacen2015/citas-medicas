@@ -18,4 +18,6 @@ public interface AreaService {
     Optional<AreaDTO> obtenerPorId(Integer id);
 
     void eliminar(Integer id);
+
+    Optional<AreaDTO> obtenerPorNombre(String nombre);
 }

@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -51,7 +52,7 @@ public class AreaServiceImplTest {
 
     @DisplayName("deberiaListarAreas")
     @Test
-    public void listarTest() {
+    public void deberiaListarAreas() {
         when(repository.findAll()).thenReturn(areasMock);
 
         List<AreaDTO> areas = service.listar();
@@ -63,7 +64,7 @@ public class AreaServiceImplTest {
 
     @DisplayName("deberiaGuardarConDatosCorrectos")
     @Test
-    public void guardarDatosCorrectosTest() {
+    public void deberiaGuardarConDatosCorrectos() {
         Area areaMock = new Area(9, "Urologia");
         AreaDTO areaDTOMock = new AreaDTO();
         areaDTOMock.setId(9);
@@ -84,10 +85,47 @@ public class AreaServiceImplTest {
 
     @DisplayName("deberiaLanzarErrorCuandoNombreAreaVacio")
     @Test
-    void guardarNombreAreaVacioTest() {
+    public void deberiaLanzarErrorCuandoNombreAreaVacioTest() {
         AreaDTO areaDTO = new AreaDTO();
         areaDTO.setNombre("");
 
         assertThrows(AreaException.class, () -> service.guardar(areaDTO));
+    }
+
+    @DisplayName("deberiaLanzarErrorCuandoNombreAreaExiste")
+    @Test
+    public void deberiaLanzarErrorCuandoNombreAreaExisteTest() {
+        AreaDTO areaDTO = new AreaDTO();
+        areaDTO.setId(4);
+        areaDTO.setNombre("Enfermeria");
+
+        Optional<Area> area = Optional.of(new Area(4, "Enfermeria"));
+
+        when(repository.findByNombre(areaDTO.getNombre())).thenReturn(area);
+        when(modelMapper.map(area, AreaDTO.class)).thenReturn(areaDTO);
+
+        assertThrows(AreaException.class, () -> service.guardar(areaDTO));
+    }
+
+    @DisplayName("deberiaObtenerDatoAreaFiltradoPorNombre")
+    @Test
+    public void deberiaObtenerDatoAreaFiltradoPorNombre() {
+        AreaDTO areaDTO = new AreaDTO();
+        areaDTO.setId(4);
+        areaDTO.setNombre("Enfermeria");
+
+        Optional<Area> area = Optional.of(new Area(4, "Enfermeria"));
+
+        Optional<AreaDTO> expect = Optional.of(areaDTO);
+
+        when(repository.findByNombre(areaDTO.getNombre())).thenReturn(area);
+        when(modelMapper.map(area, AreaDTO.class)).thenReturn(areaDTO);
+
+        Optional<AreaDTO> result = service.obtenerPorNombre(areaDTO.getNombre());
+
+        verify(repository).findByNombre(areaDTO.getNombre());
+        verify(modelMapper).map(area, AreaDTO.class);
+
+        assertEquals(expect, result);
     }
 }

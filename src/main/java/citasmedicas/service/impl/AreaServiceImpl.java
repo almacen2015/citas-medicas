@@ -22,6 +22,11 @@ public class AreaServiceImpl implements AreaService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Override
+    public Optional<AreaDTO> obtenerPorNombre(String nombre) {
+        Optional<Area> area = repository.findByNombre(nombre);
+        return Optional.ofNullable(modelMapper.map(area, AreaDTO.class));
+    }
 
     @Override
     public AreaDTO guardar(AreaDTO areaDTO) {
@@ -33,6 +38,10 @@ public class AreaServiceImpl implements AreaService {
     private void validarDatos(AreaDTO areaDTO) {
         if (areaDTO.getNombre().equals("")) {
             throw new AreaException(AreaException.NOMBRE_NO_VALIDO);
+        }
+
+        if (obtenerPorNombre(areaDTO.getNombre()).isPresent()) {
+            throw new AreaException(AreaException.NOMBRE_EXISTE);
         }
     }
 
