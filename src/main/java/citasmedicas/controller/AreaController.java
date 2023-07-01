@@ -22,61 +22,45 @@ public class AreaController {
     private AreaService service;
 
     @Operation(description = "Lista las areas")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", content = @Content(
-                    schema = @Schema(type = "array", implementation = AreaDTO.class))
-            )
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(type = "array", implementation = AreaDTO.class)))})
     @GetMapping
     public ResponseEntity<?> listar() {
         return new ResponseEntity<>(service.listar(), HttpStatus.OK);
     }
 
-    @Operation(description = "Obtiene un area por ID",
-            parameters = @Parameter(name = "id", description = "ID del área", required = true))
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", content = @Content(
-                    schema = @Schema(type = "array", implementation = AreaDTO.class))
-            )
-    })
+    @Operation(description = "Obtiene un area por ID", parameters = @Parameter(name = "id", description = "ID del área", required = true))
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(type = "array", implementation = AreaDTO.class)))})
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerArea(@PathVariable Integer id) {
         return new ResponseEntity<>(service.obtenerPorId(id), HttpStatus.OK);
     }
 
     @Operation(description = "Registra un área")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", content = @Content(
-                    schema = @Schema(type = "array", implementation = AreaDTO.class))
-            )
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(type = "array", implementation = AreaDTO.class)))})
     @PostMapping
     public ResponseEntity<?> guardar(@RequestBody AreaDTO areaDTO) {
         return new ResponseEntity<>(service.guardar(areaDTO), HttpStatus.OK);
     }
 
-    @Operation(description = "Actualiza un área por ID",
-            parameters = @Parameter(name = "id", description = "ID del área", required = true))
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", content = @Content(
-                    schema = @Schema(type = "array", implementation = AreaDTO.class))
-            )
-    })
+    @Operation(description = "Actualiza un área por ID", parameters = @Parameter(name = "id", description = "ID del área", required = true))
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(type = "array", implementation = AreaDTO.class)))})
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizar(@RequestBody AreaDTO areaDTO, @PathVariable Integer id) {
         return new ResponseEntity<>(service.actualizar(areaDTO, id), HttpStatus.OK);
     }
 
-    @Operation(description = "Elimina un área por ID",
-            parameters = @Parameter(name = "id", description = "ID del área", required = true))
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", content = @Content(
-                    schema = @Schema(type = "void", implementation = void.class))
-            )
-    })
+    @Operation(description = "Elimina un área por ID", parameters = @Parameter(name = "id", description = "ID del área", required = true))
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(type = "void", implementation = void.class)))})
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Integer id) {
         service.eliminar(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(description = "Busca area por nombre", parameters = @Parameter(name = "nombre", description = "nombre del area", required = true))
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(type = "array", implementation = AreaDTO.class)))})
+    @GetMapping("/buscar-nombre/{nombre}")
+    public ResponseEntity<?> obtenerPorNombre(@PathVariable String nombre) {
+        return new ResponseEntity<>(service.obtenerPorNombre(nombre), HttpStatus.OK);
     }
 }

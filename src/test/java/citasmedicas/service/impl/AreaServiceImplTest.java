@@ -16,8 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class AreaServiceImplTest {
@@ -127,5 +126,21 @@ public class AreaServiceImplTest {
         verify(modelMapper).map(area, AreaDTO.class);
 
         assertEquals(expect, result);
+    }
+
+    @DisplayName("deberiaObtenerNullAreaPorNombre")
+    @Test
+    public void deberiaObtenerNullAreaPorNombre() {
+        String nombre = "aaa";
+
+        when(repository.findByNombre(nombre)).thenReturn(Optional.empty());
+        when(modelMapper.map(Optional.empty(), AreaDTO.class)).thenReturn(null);
+
+        Optional<AreaDTO> result = service.obtenerPorNombre(nombre);
+
+        verify(repository).findByNombre(nombre);
+        verify(modelMapper).map(Optional.empty(), AreaDTO.class);
+
+        assertFalse(result.isPresent());
     }
 }
