@@ -49,14 +49,6 @@ public class AreaController {
         return new ResponseEntity<>(service.actualizar(areaDTO, id), HttpStatus.OK);
     }
 
-    @Operation(description = "Elimina un área por ID", parameters = @Parameter(name = "id", description = "ID del área", required = true))
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(type = "void", implementation = void.class)))})
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
-        service.eliminar(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @Operation(description = "Busca area por nombre", parameters = @Parameter(name = "nombre", description = "nombre del area", required = true))
     @ApiResponses(value = {@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(type = "array", implementation = AreaDTO.class)))})
     @GetMapping("/buscar-nombre/{nombre}")

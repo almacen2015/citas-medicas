@@ -178,23 +178,4 @@ public class AreaServiceImplTest {
 
         assertFalse(result.isPresent());
     }
-
-    @DisplayName("deberiaEliminarCuandoIdExiste")
-    @Test
-    public void deberiaEliminarCuandoIdExiste() {
-        Integer id = 1;
-
-        service.eliminar(id);
-
-        verify(repository).deleteById(id);
-    }
-
-    @Test
-    void deberiaLanzarErrorEnEliminarCuandoIdNoExiste() {
-        Integer id = 999999;
-
-        when(repository.findById(id)).thenReturn(Optional.empty());
-
-        assertThrows(AreaException.class, () -> service.eliminar(id));
-    }
 }
