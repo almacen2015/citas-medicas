@@ -143,4 +143,39 @@ public class AreaServiceImplTest {
 
         assertFalse(result.isPresent());
     }
+
+    @DisplayName("deberiaObtenerAreaPorId")
+    @Test
+    public void deberiaObtenerAreaPorId() {
+        Integer id = 1;
+        Optional<Area> areaEncontrada = Optional.of(areasMock.stream()
+                .filter(a -> a.getId().equals(id)).findFirst().get());
+        AreaDTO areaDTO = new AreaDTO();
+        areaDTO.setId(1);
+        areaDTO.setNombre("Traumatologia");
+
+        when(repository.findById(id)).thenReturn(areaEncontrada);
+        when(modelMapper.map(areaEncontrada, AreaDTO.class)).thenReturn(areaDTO);
+
+        Optional<AreaDTO> result = service.obtenerPorId(id);
+
+        verify(repository, times(1)).findById(id);
+
+        assertEquals(areaDTO.getId(), result.get().getId());
+        assertEquals(areaDTO.getNombre(), result.get().getNombre());
+    }
+
+    @DisplayName("deberiaObtenerAreaVacioCuandoIdNoExiste")
+    @Test
+    public void deberiaObtenerAreaVacioCuandoIdNoExiste() {
+        Integer id = 99999;
+
+        when(repository.findById(id)).thenReturn(Optional.empty());
+
+        Optional<AreaDTO> result = service.obtenerPorId(id);
+
+        verify(repository).findById(id);
+
+        assertFalse(result.isPresent());
+    }
 }
