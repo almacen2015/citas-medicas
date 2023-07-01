@@ -83,6 +83,9 @@ public class AreaServiceImpl implements AreaService {
 
     @Override
     public void eliminar(Integer id) {
-        repository.deleteById(id);
+        if (obtenerPorId(id).isPresent()) {
+            repository.deleteById(id);
+        }
+        throw new AreaException(AreaException.ID_NO_EXISTE);
     }
 }
