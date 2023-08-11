@@ -1,6 +1,6 @@
 package citasmedicas.service;
 
-import citasmedicas.model.Menu;
+import citasmedicas.models.entities.Menu;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

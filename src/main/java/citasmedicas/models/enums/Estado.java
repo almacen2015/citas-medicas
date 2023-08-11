@@ -1,4 +1,4 @@
-package citasmedicas.model.enums;
+package citasmedicas.models.enums;
 
 public enum Estado {
     Activo,

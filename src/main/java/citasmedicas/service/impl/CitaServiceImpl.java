@@ -1,48 +1,38 @@
 package citasmedicas.service.impl;
 
 import citasmedicas.exceptions.CitaException;
-import citasmedicas.model.Cita;
-import citasmedicas.model.dto.AreaDTO;
-import citasmedicas.model.dto.CitaDTO;
-import citasmedicas.model.dto.ClienteDTO;
+import citasmedicas.mappers.CitaMapper;
+import citasmedicas.models.dto.CitaDTO;
+import citasmedicas.models.entities.Cita;
+import citasmedicas.models.enums.Estado;
 import citasmedicas.repository.CitaRepository;
 import citasmedicas.service.AreaService;
 import citasmedicas.service.CitaService;
 import citasmedicas.service.ClienteService;
-import citasmedicas.model.enums.Estado;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CitaServiceImpl implements CitaService {
+    private final CitaRepository repository;
+    private final AreaService areaService;
+    private final ClienteService clienteService;
+    private final CitaMapper citaMapper = CitaMapper.INSTANCE;
 
-    @Autowired
-    private CitaRepository repository;
-
-    @Autowired
-    private AreaService areaService;
-
-    @Autowired
-    private ClienteService clienteService;
-
-    @Autowired
-    private ModelMapper modelMapper;
+    public CitaServiceImpl(CitaRepository repository, AreaService areaService, ClienteService clienteService) {
+        this.repository = repository;
+        this.areaService = areaService;
+        this.clienteService = clienteService;
+    }
 
     @Override
     public List<CitaDTO> listar() {
         List<Cita> citas = repository.findAll();
         List<CitaDTO> citaDTOS = new ArrayList<>();
         for (Cita cita : citas) {
-            Optional<AreaDTO> areaDTO = areaService.obtenerPorId(cita.getArea().getId());
-            Optional<ClienteDTO> clienteDTO = clienteService.obtenerCliente(cita.getCliente().getId());
-            CitaDTO citaDTO = modelMapper.map(cita, CitaDTO.class);
-            citaDTO.setAreaDTO(areaDTO.get());
-            citaDTO.setClienteDTO(clienteDTO.get());
+            CitaDTO citaDTO = citaMapper.citaToCitaDTO(cita);
             citaDTOS.add(citaDTO);
         }
         return citaDTOS;
@@ -50,9 +40,10 @@ public class CitaServiceImpl implements CitaService {
 
     @Override
     public CitaDTO guardar(CitaDTO citaDTO) {
-        Cita cita = modelMapper.map(citaDTO, Cita.class);
+        Cita cita = citaMapper.citaDTOToCita(citaDTO);
         validarDatos(cita);
-        return modelMapper.map(repository.save(cita), CitaDTO.class);
+        Cita newCita = repository.save(cita);
+        return citaMapper.citaToCitaDTO(newCita);
     }
 
     private void validarDatos(Cita cita) {

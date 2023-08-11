@@ -1,6 +1,6 @@
 package citasmedicas.controller;
 
-import citasmedicas.model.dto.AreaDTO;
+import citasmedicas.models.dto.AreaDTO;
 import citasmedicas.service.AreaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +17,11 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "http://localhost:4200")
 public class AreaController {
 
-    @Autowired
-    private AreaService service;
+    private final AreaService service;
+
+    public AreaController(AreaService service) {
+        this.service = service;
+    }
 
     @Operation(description = "Lista las areas")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(type = "array", implementation = AreaDTO.class)))})

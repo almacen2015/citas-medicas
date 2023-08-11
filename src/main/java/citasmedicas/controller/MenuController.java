@@ -1,6 +1,6 @@
 package citasmedicas.controller;
 
-import citasmedicas.model.Menu;
+import citasmedicas.models.entities.Menu;
 import citasmedicas.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,7 +1,7 @@
 package citasmedicas.service;
 
-import citasmedicas.model.Cliente;
-import citasmedicas.model.dto.ClienteDTO;
+import citasmedicas.models.dto.ClienteDTO;
+import citasmedicas.models.entities.Cliente;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

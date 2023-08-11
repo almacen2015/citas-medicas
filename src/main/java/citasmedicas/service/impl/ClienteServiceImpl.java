@@ -1,37 +1,32 @@
 package citasmedicas.service.impl;
 
 import citasmedicas.exceptions.ClienteException;
-import citasmedicas.model.Cliente;
-import citasmedicas.model.dto.ClienteDTO;
+import citasmedicas.mappers.ClienteMapper;
+import citasmedicas.models.dto.ClienteDTO;
+import citasmedicas.models.entities.Cliente;
 import citasmedicas.repository.ClienteRepository;
 import citasmedicas.service.ClienteService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
+    private final ClienteRepository repository;
+    private final ClienteMapper clienteMapper = ClienteMapper.INSTANCE;
 
-    @Autowired
-    private ClienteRepository repository;
-
-    @Autowired
-    private ModelMapper modelMapper;
+    public ClienteServiceImpl(ClienteRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public List<ClienteDTO> listar() {
         List<Cliente> clientes = repository.findAll();
         List<ClienteDTO> clienteDTOS = new ArrayList<>();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         for (Cliente cliente : clientes) {
-            String fechaStr = formatter.format(cliente.getFechaNacimiento());
-            ClienteDTO clienteDTO = modelMapper.map(cliente, ClienteDTO.class);
-            clienteDTO.setFechaNacimiento(fechaStr);
+            ClienteDTO clienteDTO = clienteMapper.clienteToClienteDTO(cliente);
             clienteDTOS.add(clienteDTO);
         }
         return clienteDTOS;
@@ -40,7 +35,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public Cliente guardar(ClienteDTO clienteDTO) {
         validarDatos(clienteDTO);
-        Cliente cliente = modelMapper.map(clienteDTO, Cliente.class);
+        Cliente cliente = clienteMapper.clienteDTOToCliente(clienteDTO);
         return repository.save(cliente);
     }
 
@@ -48,7 +43,7 @@ public class ClienteServiceImpl implements ClienteService {
     public Optional<ClienteDTO> obtenerCliente(Integer id) {
         Optional<Cliente> clienteConsultado = repository.findById(id);
         if (clienteConsultado.isPresent()) {
-            return Optional.ofNullable(modelMapper.map(clienteConsultado, ClienteDTO.class));
+            return Optional.ofNullable(clienteMapper.clienteToClienteDTO(clienteConsultado.get()));
         }
         throw new ClienteException(ClienteException.CLIENTE_NO_ENCONTRADO);
     }
@@ -59,7 +54,8 @@ public class ClienteServiceImpl implements ClienteService {
         if (clienteConsultado.isPresent()) {
             validarDatos(clienteDTO);
             Cliente clienteActualizar = asignarDatos(clienteDTO, clienteConsultado);
-            return modelMapper.map(repository.save(clienteActualizar), ClienteDTO.class);
+            Cliente updatedCliente = repository.save(clienteActualizar);
+            return clienteMapper.clienteToClienteDTO(updatedCliente);
         }
         return null;
     }
@@ -71,33 +67,35 @@ public class ClienteServiceImpl implements ClienteService {
 
     private Cliente asignarDatos(ClienteDTO clienteDTO, Optional<ClienteDTO> clienteConsultado) {
         Cliente clienteActualizar = new Cliente();
-        clienteActualizar = modelMapper.map(clienteDTO, Cliente.class);
-        clienteActualizar.setId(clienteConsultado.get().getId());
+        clienteActualizar = clienteMapper.clienteDTOToCliente(clienteDTO);
+        if (clienteConsultado.isPresent()) {
+            clienteActualizar.setId(clienteConsultado.get().id());
+        }
         return clienteActualizar;
     }
 
     private void validarDatos(ClienteDTO clienteDTO) {
-        if (clienteDTO.getNombre().equals("")) {
+        if (clienteDTO.nombre().equals("")) {
             throw new ClienteException(ClienteException.NOMBRE_NO_VALIDO);
         }
 
-        if (clienteDTO.getApellidoMaterno().equals("")) {
+        if (clienteDTO.apellidoMaterno().equals("")) {
             throw new ClienteException(ClienteException.APELLIDO_MATERNO_NO_VALIDO);
         }
 
-        if (clienteDTO.getApellidoPaterno().equals("")) {
+        if (clienteDTO.apellidoPaterno().equals("")) {
             throw new ClienteException(ClienteException.APELLIDO_PATERNO_NO_VALIDO);
         }
 
-        if (clienteDTO.getNumeroDocumento().equals("")) {
+        if (clienteDTO.numeroDocumento().equals("")) {
             throw new ClienteException(ClienteException.NUMERO_DOCUMENTO_NO_VALIDO);
         }
 
-        if (clienteDTO.getSexo().equals("")) {
+        if (clienteDTO.sexo().equals("")) {
             throw new ClienteException(ClienteException.SEXO_NO_VALIDO);
         }
 
-        if (clienteDTO.getFechaNacimiento() == null) {
+        if (clienteDTO.fechaNacimiento() == null) {
             throw new ClienteException(ClienteException.FECHA_NACIMIENTO_NO_VALIDO);
         }
     }

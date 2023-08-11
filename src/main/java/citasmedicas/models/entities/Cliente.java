@@ -1,14 +1,33 @@
-package citasmedicas.model.dto;
+package citasmedicas.models.entities;
 
-public class ClienteDTO {
+import javax.persistence.*;
+import java.util.Date;
+
+@Entity
+@Table(name = "cliente")
+public class Cliente {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String nombre;
+
+    @Column(name = "apellido_paterno")
     private String apellidoPaterno;
+
+    @Column(name = "apellido_materno")
     private String apellidoMaterno;
+
+    @Column(name = "numero_documento")
     private String numeroDocumento;
-    private String fechaNacimiento;
+
+    @Column(name = "fecha_nacimiento")
+    private Date fechaNacimiento;
+
     private String sexo;
+
     private String telefono;
+
     private String email;
 
     public Integer getId() {
@@ -51,20 +70,12 @@ public class ClienteDTO {
         this.numeroDocumento = numeroDocumento;
     }
 
-    public String getFechaNacimiento() {
+    public Date getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(String fechaNacimiento) {
+    public void setFechaNacimiento(Date fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
-    }
-
-    public String getSexo() {
-        return sexo;
-    }
-
-    public void setSexo(String sexo) {
-        this.sexo = sexo;
     }
 
     public String getTelefono() {
@@ -81,5 +92,13 @@ public class ClienteDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
     }
 }

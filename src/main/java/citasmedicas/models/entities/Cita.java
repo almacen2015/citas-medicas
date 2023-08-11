@@ -1,4 +1,4 @@
-package citasmedicas.model;
+package citasmedicas.models.entities;
 
 import javax.persistence.*;
 import java.util.Date;

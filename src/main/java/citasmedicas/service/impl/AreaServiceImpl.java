@@ -1,12 +1,11 @@
 package citasmedicas.service.impl;
 
 import citasmedicas.exceptions.AreaException;
-import citasmedicas.model.Area;
-import citasmedicas.model.dto.AreaDTO;
+import citasmedicas.mappers.AreaMapper;
+import citasmedicas.models.dto.AreaDTO;
+import citasmedicas.models.entities.Area;
 import citasmedicas.repository.AreaRepository;
 import citasmedicas.service.AreaService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,32 +14,36 @@ import java.util.Optional;
 
 @Service
 public class AreaServiceImpl implements AreaService {
+    private final AreaRepository repository;
+    private final AreaMapper areaMapper = AreaMapper.INSTANCE;
 
-    @Autowired
-    private AreaRepository repository;
-
-    @Autowired
-    private ModelMapper modelMapper;
+    public AreaServiceImpl(AreaRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public Optional<AreaDTO> obtenerPorNombre(String nombre) {
         Optional<Area> area = repository.findByNombre(nombre);
-        return Optional.ofNullable(modelMapper.map(area, AreaDTO.class));
+        if (area.isPresent()) {
+            return Optional.ofNullable(areaMapper.areaToAreaDTO(area.get()));
+        }
+        return Optional.empty();
     }
 
     @Override
     public AreaDTO guardar(AreaDTO areaDTO) {
         validarDatos(areaDTO);
-        Area area = modelMapper.map(areaDTO, Area.class);
-        return modelMapper.map(repository.save(area), AreaDTO.class);
+        Area area = AreaMapper.INSTANCE.areaDTOToArea(areaDTO);
+        Area newArea = repository.save(area);
+        return areaMapper.areaToAreaDTO(newArea);
     }
 
     private void validarDatos(AreaDTO areaDTO) {
-        if (areaDTO.getNombre().equals("")) {
+        if (areaDTO.nombre().isEmpty()) {
             throw new AreaException(AreaException.NOMBRE_NO_VALIDO);
         }
 
-        if (obtenerPorNombre(areaDTO.getNombre()).isPresent()) {
+        if (obtenerPorNombre(areaDTO.nombre()).isPresent()) {
             throw new AreaException(AreaException.NOMBRE_EXISTE);
         }
     }
@@ -50,7 +53,7 @@ public class AreaServiceImpl implements AreaService {
         List<Area> areas = repository.findAll();
         List<AreaDTO> areaDTOS = new ArrayList<>();
         for (Area area : areas) {
-            areaDTOS.add(modelMapper.map(area, AreaDTO.class));
+            areaDTOS.add(areaMapper.areaToAreaDTO(area));
         }
         return areaDTOS;
     }
@@ -61,14 +64,14 @@ public class AreaServiceImpl implements AreaService {
         if (areaDtoConsultado.isPresent()) {
             validarDatos(areaDTO);
             Area area = asignarDatosActualizar(areaDTO, areaDtoConsultado);
-            return modelMapper.map(repository.save(area), AreaDTO.class);
+            return null;
         }
         return null;
     }
 
     private Area asignarDatosActualizar(AreaDTO areaDTO, Optional<AreaDTO> areaConsultado) {
-        Area area = modelMapper.map(areaDTO, Area.class);
-        area.setId(areaConsultado.get().getId());
+        Area area = areaMapper.areaDTOToArea(areaDTO);
+        areaConsultado.ifPresent(dto -> area.setId(dto.id()));
         return area;
     }
 
@@ -76,7 +79,7 @@ public class AreaServiceImpl implements AreaService {
     public Optional<AreaDTO> obtenerPorId(Integer id) {
         Optional<Area> area = repository.findById(id);
         if (area.isPresent()) {
-            return Optional.ofNullable(modelMapper.map(area, AreaDTO.class));
+            return Optional.ofNullable(areaMapper.areaToAreaDTO(area.get()));
         }
         return Optional.empty();
     }

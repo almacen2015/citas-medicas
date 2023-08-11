@@ -1,7 +1,7 @@
 package citasmedicas.service.impl;
 
 import citasmedicas.exceptions.MenuException;
-import citasmedicas.model.Menu;
+import citasmedicas.models.entities.Menu;
 import citasmedicas.repository.MenuRepository;
 import citasmedicas.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
