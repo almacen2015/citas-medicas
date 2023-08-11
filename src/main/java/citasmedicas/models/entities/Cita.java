@@ -1,7 +1,9 @@
 package citasmedicas.models.entities;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "cita")
@@ -74,5 +76,31 @@ public class Cita {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    @Override
+    public String toString() {
+        return "Cita{" +
+                "id=" + id +
+                ", cliente=" + cliente +
+                ", area=" + area +
+                ", titulo='" + titulo + '\'' +
+                ", fechaInicio=" + fechaInicio +
+                ", fechaFin=" + fechaFin +
+                ", estado='" + estado + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cita cita = (Cita) o;
+        return Objects.equals(id, cita.id) && Objects.equals(cliente, cita.cliente) && Objects.equals(area, cita.area) && Objects.equals(titulo, cita.titulo) && Objects.equals(fechaInicio, cita.fechaInicio) && Objects.equals(fechaFin, cita.fechaFin) && Objects.equals(estado, cita.estado);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, cliente, area, titulo, fechaInicio, fechaFin, estado);
     }
 }

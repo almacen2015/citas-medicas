@@ -1,26 +1,34 @@
 package citasmedicas.service.impl;
 
+import citasmedicas.mappers.AreaMapper;
+import citasmedicas.models.entities.Area;
+import citasmedicas.repository.AreaRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 public class AreaServiceImplTest {
-    /*
     @Mock
     private AreaRepository repository;
-
     @Mock
-    private AreaMapper areaMapper;
-
+    private AreaMapper areaMapper = AreaMapper.INSTANCE;
     @InjectMocks
     private AreaServiceImpl service;
-
     private static List<Area> areasMock;
-
-    public AreaServiceImplTest() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @BeforeEach
     public void setUp() {
         areasMock = new ArrayList<>();
-
         areasMock.add(new Area(1, "Traumatologia"));
         areasMock.add(new Area(2, "Odontologia"));
         areasMock.add(new Area(3, "Obstetricia"));
@@ -31,17 +39,20 @@ public class AreaServiceImplTest {
         areasMock.add(new Area(8, "Nueva Pediatria"));
     }
 
+    public AreaServiceImplTest() {
+        MockitoAnnotations.openMocks(this);
+    }
+
     @DisplayName("deberiaListarAreas")
     @Test
-    public void deberiaListarAreas() {
+    public void testListar() {
         when(repository.findAll()).thenReturn(areasMock);
-
-        List<AreaDTO> areas = service.listar();
-
-        verify(repository, times(1)).findAll();
-
-        assertEquals(areasMock.size(), areas.size());
+        service.listar();
+        verify(repository).findAll();
+        assertEquals(areasMock.size(), service.listar().size());
     }
+
+    /*
 
     @DisplayName("deberiaGuardarConDatosCorrectos")
     @Test

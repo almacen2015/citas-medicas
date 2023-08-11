@@ -1,6 +1,8 @@
 package citasmedicas.models.entities;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "menu")
@@ -42,5 +44,28 @@ public class Menu {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Menu menu = (Menu) o;
+        return Objects.equals(codigo, menu.codigo) && Objects.equals(nombre, menu.nombre) && Objects.equals(ruta, menu.ruta) && Objects.equals(icon, menu.icon);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(codigo, nombre, ruta, icon);
+    }
+
+    @Override
+    public String toString() {
+        return "Menu{" +
+                "codigo=" + codigo +
+                ", nombre='" + nombre + '\'' +
+                ", ruta='" + ruta + '\'' +
+                ", icon='" + icon + '\'' +
+                '}';
     }
 }

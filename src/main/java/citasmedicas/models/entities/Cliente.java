@@ -1,7 +1,9 @@
 package citasmedicas.models.entities;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "cliente")
@@ -100,5 +102,33 @@ public class Cliente {
 
     public void setSexo(String sexo) {
         this.sexo = sexo;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cliente cliente = (Cliente) o;
+        return Objects.equals(id, cliente.id) && Objects.equals(nombre, cliente.nombre) && Objects.equals(apellidoPaterno, cliente.apellidoPaterno) && Objects.equals(apellidoMaterno, cliente.apellidoMaterno) && Objects.equals(numeroDocumento, cliente.numeroDocumento) && Objects.equals(fechaNacimiento, cliente.fechaNacimiento) && Objects.equals(sexo, cliente.sexo) && Objects.equals(telefono, cliente.telefono) && Objects.equals(email, cliente.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, fechaNacimiento, sexo, telefono, email);
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", apellidoPaterno='" + apellidoPaterno + '\'' +
+                ", apellidoMaterno='" + apellidoMaterno + '\'' +
+                ", numeroDocumento='" + numeroDocumento + '\'' +
+                ", fechaNacimiento=" + fechaNacimiento +
+                ", sexo='" + sexo + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }
