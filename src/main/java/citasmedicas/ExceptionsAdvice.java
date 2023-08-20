@@ -1,9 +1,6 @@
 package citasmedicas;
 
-import citasmedicas.exceptions.AreaException;
-import citasmedicas.exceptions.CitaException;
-import citasmedicas.exceptions.ClienteException;
-import citasmedicas.exceptions.MenuException;
+import citasmedicas.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -45,8 +42,15 @@ public class ExceptionsAdvice {
         return switch (e.getMessage()) {
             case "EXISTE_CITA_MISMA_AREA", "EXISTE_CITA_MISMA_HORA",
                     "TITULO_NO_VALIDO", "AREA_NO_VALIDO", "CLIENTE_NO_VALIDO",
-                    "commit", "FECHA_FIN_NO_VALIDO" ->
-                    new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+                    "commit", "FECHA_FIN_NO_VALIDO" -> new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            default -> new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        };
+    }
+
+    @ExceptionHandler(TipoEmpleadoException.class)
+    public ResponseEntity<?> handleTipoEmpleadoException(TipoEmpleadoException e) {
+        return switch (e.getMessage()) {
+            case "ID_NO_EXISTE", "NOMBRE_EXISTE" -> new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
             default -> new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         };
     }

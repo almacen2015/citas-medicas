@@ -5,21 +5,20 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "areas")
-public class Area {
-
+@Table(name = "tipos_empleados")
+public class TipoEmpleado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private String nombre;
+    private Boolean estado;
 
-    public Area() {
+    public TipoEmpleado() {
     }
 
-    public Area(Integer id, String nombre) {
-        this.id = id;
+    public TipoEmpleado(String nombre, Boolean estado) {
         this.nombre = nombre;
+        this.estado = estado;
     }
 
     public Integer getId() {
@@ -38,24 +37,33 @@ public class Area {
         this.nombre = nombre;
     }
 
+    public Boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Area area = (Area) o;
-        return Objects.equals(id, area.id) && Objects.equals(nombre, area.nombre);
+        TipoEmpleado that = (TipoEmpleado) o;
+        return Objects.equals(id, that.id) && Objects.equals(nombre, that.nombre) && Objects.equals(estado, that.estado);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nombre);
+        return Objects.hash(id, nombre, estado);
     }
 
     @Override
     public String toString() {
-        return "Area{" +
-                "id=" + id +
+        return "TipoEmpleado{" +
+                "id='" + id + '\'' +
                 ", nombre='" + nombre + '\'' +
+                ", estado=" + estado +
                 '}';
     }
 }
