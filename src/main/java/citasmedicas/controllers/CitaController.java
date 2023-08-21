@@ -24,7 +24,7 @@ public class CitaController {
         this.service = service;
     }
 
-    @Operation(description = "Lista las citas")
+    @Operation(summary = "Listar citas", description = "Lista las citas")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", content = @Content(
                     schema = @Schema(type = "array", implementation = CitaDTO.class))
@@ -35,7 +35,7 @@ public class CitaController {
         return new ResponseEntity<>(service.listar(), HttpStatus.OK);
     }
 
-    @Operation(description = "Guarda la cita")
+    @Operation(summary = "Guarda una cita",description = "Guarda la cita")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", content = @Content(
                     schema = @Schema(type = "array", implementation = CitaDTO.class)

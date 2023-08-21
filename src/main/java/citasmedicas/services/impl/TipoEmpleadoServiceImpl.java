@@ -34,40 +34,43 @@ public class TipoEmpleadoServiceImpl implements TipoEmpleadoService {
     @Override
     public TipoEmpleadoDTO guardar(TipoEmpleadoDTO tipoEmpleadoDTO) {
         TipoEmpleado tipoEmpleado = tipoEmpleadoMapper.tipoEmpleadoDTOToTipoEmpleado(tipoEmpleadoDTO);
-        if (buscarPorNombre(tipoEmpleado.getNombre()).isPresent()) {
-            throw new TipoEmpleadoException(TipoEmpleadoException.NOMBRE_REPETIDO);
-        }
+        buscarPorNombre(tipoEmpleado.getNombre());
         TipoEmpleado tipoEmpleadoGuardado = repository.save(tipoEmpleado);
         return tipoEmpleadoMapper.tipoEmpleadoToTipoEmpleadoDTO(tipoEmpleadoGuardado);
     }
 
     @Override
-    public Optional<TipoEmpleadoDTO> buscarPorId(Integer id) {
-        Optional<TipoEmpleado> tipoEmpleado = repository.findById(id);
-        if (tipoEmpleado.isEmpty()) return Optional.empty();
-        TipoEmpleadoDTO tipoEmpleadoDTO = tipoEmpleadoMapper.tipoEmpleadoToTipoEmpleadoDTO(tipoEmpleado.get());
-        return Optional.of(tipoEmpleadoDTO);
-    }
-
-    @Override
-    public Optional<TipoEmpleadoDTO> buscarPorNombre(String nombre) {
-        Optional<TipoEmpleado> tipoEmpleado = repository.findByNombre(nombre);
-        if (tipoEmpleado.isEmpty()) return Optional.empty();
-        TipoEmpleadoDTO tipoEmpleadoDTO = tipoEmpleadoMapper.tipoEmpleadoToTipoEmpleadoDTO(tipoEmpleado.get());
-        return Optional.of(tipoEmpleadoDTO);
-    }
-
-    @Override
-    public TipoEmpleadoDTO actualizar(TipoEmpleadoDTO tipoEmpleadoDTO) {
-        return null;
-    }
-
-    @Override
-    public void eliminar(Integer id) {
+    public TipoEmpleadoDTO buscarPorId(Integer id) {
         Optional<TipoEmpleado> tipoEmpleado = repository.findById(id);
         if (tipoEmpleado.isEmpty()) {
             throw new TipoEmpleadoException(TipoEmpleadoException.ID_NO_EXISTE);
         }
-        repository.deleteById(id);
+        return tipoEmpleadoMapper.tipoEmpleadoToTipoEmpleadoDTO(tipoEmpleado.get());
+    }
+
+    @Override
+    public TipoEmpleadoDTO buscarPorNombre(String nombre) {
+        Optional<TipoEmpleado> tipoEmpleado = repository.findByNombre(nombre);
+        if (tipoEmpleado.isEmpty()) {
+            throw new TipoEmpleadoException(TipoEmpleadoException.NOMBRE_NO_EXISTE);
+        }
+        return tipoEmpleadoMapper.tipoEmpleadoToTipoEmpleadoDTO(tipoEmpleado.get());
+    }
+
+    @Override
+    public TipoEmpleadoDTO actualizar(TipoEmpleadoDTO tipoEmpleadoDTO) {
+        TipoEmpleado tipoEmpleado = tipoEmpleadoMapper.tipoEmpleadoDTOToTipoEmpleado(tipoEmpleadoDTO);
+        Optional<TipoEmpleado> tipoEmpleadoEncontrado = repository.findById(tipoEmpleado.getId());
+        if (tipoEmpleadoEncontrado.isEmpty()) {
+            throw new TipoEmpleadoException(TipoEmpleadoException.ID_NO_EXISTE);
+        }
+        TipoEmpleado tipoEmpleadoActualizado = repository.save(tipoEmpleadoMapper.tipoEmpleadoDTOToTipoEmpleado(tipoEmpleadoDTO));
+        return tipoEmpleadoMapper.tipoEmpleadoToTipoEmpleadoDTO(tipoEmpleadoActualizado);
+    }
+
+    @Override
+    public void eliminar(Integer id) {
+        TipoEmpleadoDTO tipoEmpleadoDTOEncontrado = buscarPorId(id);
+        repository.deleteById(tipoEmpleadoDTOEncontrado.id());
     }
 }

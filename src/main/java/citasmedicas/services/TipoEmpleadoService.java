@@ -4,7 +4,6 @@ import citasmedicas.models.dto.TipoEmpleadoDTO;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Transactional(rollbackFor = Exception.class)
 public interface TipoEmpleadoService {
@@ -12,9 +11,9 @@ public interface TipoEmpleadoService {
 
     TipoEmpleadoDTO guardar(TipoEmpleadoDTO tipoEmpleadoDTO);
 
-    Optional<TipoEmpleadoDTO> buscarPorId(Integer id);
+    TipoEmpleadoDTO buscarPorId(Integer id);
 
-    Optional<TipoEmpleadoDTO> buscarPorNombre(String nombre);
+    TipoEmpleadoDTO buscarPorNombre(String nombre);
 
     TipoEmpleadoDTO actualizar(TipoEmpleadoDTO tipoEmpleadoDTO);
 

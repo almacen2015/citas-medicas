@@ -1,6 +1,6 @@
 package citasmedicas.models.dto;
 
-public record EmpleadoDTO(String id,
+public record EmpleadoDTO(Integer id,
                           String nombre,
                           String apellidoPaterno,
                           String apellidoMaterno,

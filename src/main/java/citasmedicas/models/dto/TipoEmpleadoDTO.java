@@ -1,6 +1,6 @@
 package citasmedicas.models.dto;
 
-public record TipoEmpleadoDTO(String id,
+public record TipoEmpleadoDTO(Integer id,
                               String nombre,
                               Boolean estado) {
 }

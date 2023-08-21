@@ -22,7 +22,7 @@ public class ClienteController {
         this.service = service;
     }
 
-    @Operation(description = "Lista los clientes")
+    @Operation(summary = "Lista todos los clientes", description = "Lista todos los clientes")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", content = @Content(
                     schema = @Schema(type = "array", implementation = ClienteDTO.class))
@@ -33,7 +33,7 @@ public class ClienteController {
         return new ResponseEntity<>(service.listar(), HttpStatus.OK);
     }
 
-    @Operation(description = "Registra un cliente")
+    @Operation(summary = "Registra un cliente", description = "Registra un cliente")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", content = @Content(
                     schema = @Schema(type = "array", implementation = ClienteDTO.class))
@@ -44,7 +44,7 @@ public class ClienteController {
         return new ResponseEntity<>(service.guardar(clienteDTO), HttpStatus.CREATED);
     }
 
-    @Operation(description = "Elimina un cliente por ID",
+    @Operation(summary = "Elimina un cliente por id", description = "Elimina un cliente por ID",
             parameters = @Parameter(name = "id", description = "ID del cliente", required = true))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", content = @Content(
@@ -57,7 +57,7 @@ public class ClienteController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Operation(description = "Actualiza un cliente por ID",
+    @Operation(summary = "Actualizar un cliente", description = "Actualiza un cliente",
             parameters = @Parameter(name = "id", description = "ID del cliente", required = true))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", content = @Content(
@@ -69,7 +69,7 @@ public class ClienteController {
         return new ResponseEntity<>(service.actualizar(clienteDTO, id), HttpStatus.OK);
     }
 
-    @Operation(description = "obtiene un cliente por ID",
+    @Operation(summary = "Obtiene un cliente por ID", description = "Obtiene un cliente por ID",
             parameters = @Parameter(name = "id", description = "ID del cliente", required = true))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", content = @Content(

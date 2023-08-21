@@ -50,7 +50,8 @@ public class ExceptionsAdvice {
     @ExceptionHandler(TipoEmpleadoException.class)
     public ResponseEntity<?> handleTipoEmpleadoException(TipoEmpleadoException e) {
         return switch (e.getMessage()) {
-            case "ID_NO_EXISTE", "NOMBRE_EXISTE" -> new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            case "ID_NO_EXISTE" -> new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            case "NOMBRE_REPETIDO" -> new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
             default -> new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         };
     }
