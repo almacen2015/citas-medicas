@@ -8,7 +8,6 @@ import citasmedicas.repositories.TipoEmpleadoRepository;
 import citasmedicas.services.TipoEmpleadoService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,11 +23,7 @@ public class TipoEmpleadoServiceImpl implements TipoEmpleadoService {
     @Override
     public List<TipoEmpleadoDTO> listar() {
         List<TipoEmpleado> tiposEmpleados = repository.findAll();
-        List<TipoEmpleadoDTO> tiposEmpleadosDTO = new ArrayList<>();
-        for (TipoEmpleado tipoEmpleado : tiposEmpleados) {
-            tiposEmpleadosDTO.add(tipoEmpleadoMapper.tipoEmpleadoToTipoEmpleadoDTO(tipoEmpleado));
-        }
-        return tiposEmpleadosDTO;
+        return tipoEmpleadoMapper.tipoEmpleadosToTipoEmpleadosDTO(tiposEmpleados);
     }
 
     @Override

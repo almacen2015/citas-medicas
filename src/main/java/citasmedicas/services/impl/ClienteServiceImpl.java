@@ -1,14 +1,13 @@
 package citasmedicas.services.impl;
 
 import citasmedicas.exceptions.ClienteException;
-import citasmedicas.models.mappers.ClienteMapper;
 import citasmedicas.models.dto.ClienteDTO;
 import citasmedicas.models.entities.Cliente;
+import citasmedicas.models.mappers.ClienteMapper;
 import citasmedicas.repositories.ClienteRepository;
 import citasmedicas.services.ClienteService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,12 +23,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public List<ClienteDTO> listar() {
         List<Cliente> clientes = repository.findAll();
-        List<ClienteDTO> clienteDTOS = new ArrayList<>();
-        for (Cliente cliente : clientes) {
-            ClienteDTO clienteDTO = clienteMapper.clienteToClienteDTO(cliente);
-            clienteDTOS.add(clienteDTO);
-        }
-        return clienteDTOS;
+        return clienteMapper.clientesToClientesDTO(clientes);
     }
 
     @Override
@@ -40,7 +34,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Optional<ClienteDTO> obtenerCliente(Integer id) {
+    public Optional<ClienteDTO> obtenerClientePorId(Integer id) {
         Optional<Cliente> clienteConsultado = repository.findById(id);
         if (clienteConsultado.isPresent()) {
             return Optional.ofNullable(clienteMapper.clienteToClienteDTO(clienteConsultado.get()));
@@ -50,7 +44,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public ClienteDTO actualizar(ClienteDTO clienteDTO, Integer id) {
-        Optional<ClienteDTO> clienteConsultado = obtenerCliente(id);
+        Optional<ClienteDTO> clienteConsultado = obtenerClientePorId(id);
         if (clienteConsultado.isPresent()) {
             validarDatos(clienteDTO);
             Cliente clienteActualizar = asignarDatos(clienteDTO, clienteConsultado);

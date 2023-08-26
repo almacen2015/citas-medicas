@@ -78,6 +78,6 @@ public class ClienteController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerCliente(@PathVariable Integer id) {
-        return new ResponseEntity<>(service.obtenerCliente(id), HttpStatus.OK);
+        return new ResponseEntity<>(service.obtenerClientePorId(id), HttpStatus.OK);
     }
 }

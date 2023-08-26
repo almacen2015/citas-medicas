@@ -4,7 +4,6 @@ import citasmedicas.models.dto.AreaDTO;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Transactional(rollbackFor = Exception.class)
 public interface AreaService {
@@ -14,7 +13,7 @@ public interface AreaService {
 
     AreaDTO actualizar(AreaDTO areaDTO, Integer id);
 
-    Optional<AreaDTO> obtenerPorId(Integer id);
+    AreaDTO obtenerPorId(Integer id);
 
-    Optional<AreaDTO> obtenerPorNombre(String nombre);
+    AreaDTO obtenerPorNombre(String nombre);
 }

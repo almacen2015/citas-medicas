@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/area")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -26,35 +28,35 @@ public class AreaController {
     @Operation(summary = "Lista todas las areas", description = "Lista todas las areas")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(type = "array", implementation = AreaDTO.class)))})
     @GetMapping
-    public ResponseEntity<?> listar() {
+    public ResponseEntity<List<AreaDTO>> listar() {
         return new ResponseEntity<>(service.listar(), HttpStatus.OK);
     }
 
     @Operation(summary = "Obtiene un area por id", description = "Obtiene un area por ID", parameters = @Parameter(name = "id", description = "ID del área", required = true))
     @ApiResponses(value = {@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(type = "array", implementation = AreaDTO.class)))})
     @GetMapping("/{id}")
-    public ResponseEntity<?> obtenerArea(@PathVariable Integer id) {
+    public ResponseEntity<AreaDTO> obtenerAreaPorId(@PathVariable Integer id) {
         return new ResponseEntity<>(service.obtenerPorId(id), HttpStatus.OK);
     }
 
     @Operation(summary = "Guarda un área", description = "Guarda un área")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(type = "array", implementation = AreaDTO.class)))})
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", content = @Content(schema = @Schema(type = "array", implementation = AreaDTO.class)))})
     @PostMapping
-    public ResponseEntity<?> guardar(@RequestBody AreaDTO areaDTO) {
-        return new ResponseEntity<>(service.guardar(areaDTO), HttpStatus.OK);
+    public ResponseEntity<AreaDTO> guardar(@RequestBody AreaDTO areaDTO) {
+        return new ResponseEntity<>(service.guardar(areaDTO), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Actualiza un area", description = "Actualiza un área por ID", parameters = @Parameter(name = "id", description = "ID del área", required = true))
     @ApiResponses(value = {@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(type = "array", implementation = AreaDTO.class)))})
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@RequestBody AreaDTO areaDTO, @PathVariable Integer id) {
+    public ResponseEntity<AreaDTO> actualizar(@RequestBody AreaDTO areaDTO, @PathVariable Integer id) {
         return new ResponseEntity<>(service.actualizar(areaDTO, id), HttpStatus.OK);
     }
 
     @Operation(summary = "Busca un area por nombre", description = "Busca area por nombre", parameters = @Parameter(name = "nombre", description = "nombre del area", required = true))
     @ApiResponses(value = {@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(type = "array", implementation = AreaDTO.class)))})
     @GetMapping("/buscar-nombre/{nombre}")
-    public ResponseEntity<?> obtenerPorNombre(@PathVariable String nombre) {
+    public ResponseEntity<AreaDTO> obtenerPorNombre(@PathVariable String nombre) {
         return new ResponseEntity<>(service.obtenerPorNombre(nombre), HttpStatus.OK);
     }
 }

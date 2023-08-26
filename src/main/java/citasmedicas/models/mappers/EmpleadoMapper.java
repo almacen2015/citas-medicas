@@ -6,26 +6,22 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper
 public interface EmpleadoMapper {
 
     EmpleadoMapper INSTANCE = Mappers.getMapper(EmpleadoMapper.class);
 
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "nombre", target = "nombre")
-    @Mapping(source = "apellidoPaterno", target = "apellidoPaterno")
-    @Mapping(source = "apellidoMaterno", target = "apellidoMaterno")
-    @Mapping(source = "numeroDocumento", target = "numeroDocumento")
     @Mapping(source = "tipoEmpleadoDTO", target = "tipoEmpleado")
-    @Mapping(source = "estado", target = "estado")
     Empleado empleadoDTOToEmpleado(EmpleadoDTO empleadoDTO);
 
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "nombre", target = "nombre")
-    @Mapping(source = "apellidoPaterno", target = "apellidoPaterno")
-    @Mapping(source = "apellidoMaterno", target = "apellidoMaterno")
-    @Mapping(source = "numeroDocumento", target = "numeroDocumento")
     @Mapping(source = "tipoEmpleado", target = "tipoEmpleadoDTO")
-    @Mapping(source = "estado", target = "estado")
     EmpleadoDTO empleadoToEmpleadoDTO(Empleado empleado);
+
+    @Mapping(source = "tipoEmpleado", target = "tipoEmpleadoDTO")
+    List<EmpleadoDTO> empleadosToEmpleadosDTO(List<Empleado> empleados);
+
+    @Mapping(source = "tipoEmpleadoDTO", target = "tipoEmpleado")
+    List<Empleado> empleadosDTOToEmpleados(List<EmpleadoDTO> empleadosDTO);
 }

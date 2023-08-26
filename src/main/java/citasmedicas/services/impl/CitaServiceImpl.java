@@ -1,17 +1,16 @@
 package citasmedicas.services.impl;
 
 import citasmedicas.exceptions.CitaException;
-import citasmedicas.models.mappers.CitaMapper;
 import citasmedicas.models.dto.CitaDTO;
 import citasmedicas.models.entities.Cita;
 import citasmedicas.models.enums.Estado;
+import citasmedicas.models.mappers.CitaMapper;
 import citasmedicas.repositories.CitaRepository;
 import citasmedicas.services.AreaService;
 import citasmedicas.services.CitaService;
 import citasmedicas.services.ClienteService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,12 +29,7 @@ public class CitaServiceImpl implements CitaService {
     @Override
     public List<CitaDTO> listar() {
         List<Cita> citas = repository.findAll();
-        List<CitaDTO> citaDTOS = new ArrayList<>();
-        for (Cita cita : citas) {
-            CitaDTO citaDTO = citaMapper.citaToCitaDTO(cita);
-            citaDTOS.add(citaDTO);
-        }
-        return citaDTOS;
+        return citaMapper.citasToCitasDTO(citas);
     }
 
     @Override

@@ -3,18 +3,19 @@ package citasmedicas.models.mappers;
 import citasmedicas.models.dto.AreaDTO;
 import citasmedicas.models.entities.Area;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 @Mapper
 public interface AreaMapper {
     AreaMapper INSTANCE = Mappers.getMapper(AreaMapper.class);
 
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "nombre", target = "nombre")
     AreaDTO areaToAreaDTO(Area area);
 
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "nombre", target = "nombre")
     Area areaDTOToArea(AreaDTO areaDTO);
+
+    List<Area> areasDTOToAreas(List<AreaDTO> areasDTO);
+
+    List<AreaDTO> areasToAreasDTO(List<Area> areas);
 }
