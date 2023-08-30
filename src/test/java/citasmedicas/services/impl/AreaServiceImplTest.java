@@ -29,14 +29,14 @@ public class AreaServiceImplTest {
     @BeforeEach
     public void setUp() {
         areasMock = new ArrayList<>();
-        areasMock.add(new Area(1, "Traumatologia"));
-        areasMock.add(new Area(2, "Odontologia"));
-        areasMock.add(new Area(3, "Obstetricia"));
-        areasMock.add(new Area(4, "Enfermeria"));
-        areasMock.add(new Area(5, "Cardiologia"));
-        areasMock.add(new Area(6, "Medicina"));
-        areasMock.add(new Area(7, "Pediatria"));
-        areasMock.add(new Area(8, "Nueva Pediatria"));
+        areasMock.add(new Area(1, "Traumatologia", true));
+        areasMock.add(new Area(2, "Odontologia", true));
+        areasMock.add(new Area(3, "Obstetricia", true));
+        areasMock.add(new Area(4, "Enfermeria", true));
+        areasMock.add(new Area(5, "Cardiologia", true));
+        areasMock.add(new Area(6, "Medicina", true));
+        areasMock.add(new Area(7, "Pediatria", true));
+        areasMock.add(new Area(8, "Nueva Pediatria", true));
     }
 
     public AreaServiceImplTest() {

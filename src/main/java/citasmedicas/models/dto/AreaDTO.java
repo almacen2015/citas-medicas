@@ -1,4 +1,4 @@
 package citasmedicas.models.dto;
 
-public record AreaDTO(Integer id, String nombre) {
+public record AreaDTO(Integer id, String nombre, Boolean estado) {
 }

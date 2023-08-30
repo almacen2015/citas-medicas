@@ -11,15 +11,16 @@ public class Area {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private String nombre;
+    private Boolean estado;
 
     public Area() {
     }
 
-    public Area(Integer id, String nombre) {
+    public Area(Integer id, String nombre, Boolean estado) {
         this.id = id;
         this.nombre = nombre;
+        this.estado = estado;
     }
 
     public Integer getId() {
@@ -36,6 +37,14 @@ public class Area {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public Boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
     }
 
     @Override
@@ -56,6 +65,7 @@ public class Area {
         return "Area{" +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
+                ", estado=" + estado +
                 '}';
     }
 }
