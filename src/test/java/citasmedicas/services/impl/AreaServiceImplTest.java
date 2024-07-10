@@ -78,4 +78,91 @@ public class AreaServiceImplTest {
         //Act & Assert
         assertThrows(AreaException.class, () -> service.guardar(areaDTO));
     }
+
+    @Test
+    public void testObtenerPorNombre_DadoNombreExistente_RetornaAreaDTO() {
+        //Arrange
+        Area area = new Area();
+        area.setId(1);
+        area.setNombre("Medicina General");
+        area.setEstado(true);
+
+        AreaDTO areaDTO = new AreaDTO(1, "Medicina General", true);
+
+        when(repository.findByNombre(area.getNombre())).thenReturn(Optional.of(area));
+
+        //Act
+        AreaDTO areaDtoEncontrado = service.obtenerPorNombre(areaDTO.nombre());
+
+        //Assert
+        assertThat(areaDtoEncontrado).isNotNull();
+        assertThat(areaDtoEncontrado.id()).isEqualTo(1);
+        assertThat(areaDtoEncontrado.nombre()).isEqualTo("Medicina General");
+    }
+
+    @Test
+    public void testObtenerPorNombre_DadoNombreNoExiste_RetornaVacio() {
+        //Arrange
+        String nombre = "Carpinteria";
+
+        when(repository.findByNombre(nombre)).thenReturn(Optional.empty());
+
+        //Act
+        AreaDTO areaDTOEncontrada = service.obtenerPorNombre(nombre);
+
+        //Assert
+        assertThat(areaDTOEncontrada).isNull();
+    }
+
+    @Test
+    public void testObtenerPorId_DadoIdExistente_RetornaAreaDTO() {
+        //Arrange
+        Area area = new Area();
+        area.setId(1);
+        area.setNombre("Medicina General");
+        area.setEstado(true);
+
+        final int id = 1;
+
+        when(repository.findById(id)).thenReturn(Optional.of(area));
+
+        //Act
+        AreaDTO areaDTOEncontrada = service.obtenerPorId(id);
+
+        //Assert
+        assertThat(areaDTOEncontrada).isNotNull();
+
+    }
+
+    @Test
+    public void testObtenerPorId_DadoIdNoExiste_RetornaVacio() {
+        //Arrange
+        final int id = 500;
+
+        when(repository.findById(id)).thenReturn(Optional.empty());
+
+        //Act
+        AreaDTO areaDTOEncontrada = service.obtenerPorId(id);
+
+        //Assert
+        assertThat(areaDTOEncontrada).isNull();
+    }
+
+    @Test
+    public void testObtenerPorId_DadoIdVacio_RetornaError() {
+        //Arrange
+        Integer id = null;
+
+        //Act & Assert
+        assertThrows(AreaException.class, () -> service.obtenerPorId(id));
+    }
+
+    @Test
+    public void testObtenerPorId_DadoIdMenorOIgualCero_RetornaError() {
+        //Arrange
+        final int id = -1;
+
+        //Act & Assert
+        assertThrows(AreaException.class, () -> service.obtenerPorId(id));
+    }
 }

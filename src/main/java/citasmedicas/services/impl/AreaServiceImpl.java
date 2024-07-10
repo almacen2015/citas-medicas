@@ -78,6 +78,9 @@ public class AreaServiceImpl implements AreaService {
 
     @Override
     public AreaDTO obtenerPorId(Integer id) {
+        if (id == null || id <= 0) {
+            throw new AreaException(AreaException.ID_NO_VALIDO);
+        }
         Optional<Area> area = repository.findById(id);
         if (area.isPresent()) {
             return areaMapper.areaToAreaDTO(area.get());
