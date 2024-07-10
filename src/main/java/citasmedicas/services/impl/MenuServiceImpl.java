@@ -4,7 +4,6 @@ import citasmedicas.exceptions.MenuException;
 import citasmedicas.models.entities.Menu;
 import citasmedicas.repositories.MenuRepository;
 import citasmedicas.services.MenuService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,9 +11,11 @@ import java.util.Optional;
 
 @Service
 public class MenuServiceImpl implements MenuService {
+    private final MenuRepository repository;
 
-    @Autowired
-    private MenuRepository repository;
+    public MenuServiceImpl(MenuRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public List<Menu> obtenerMenus() {

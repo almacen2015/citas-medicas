@@ -20,8 +20,10 @@ import static org.mockito.Mockito.when;
 public class AreaServiceImplTest {
     @Mock
     private AreaRepository repository;
+
     @Mock
     private AreaMapper areaMapper = AreaMapper.INSTANCE;
+
     @InjectMocks
     private AreaServiceImpl service;
     private static List<Area> areasMock;
