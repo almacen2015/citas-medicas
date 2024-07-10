@@ -38,6 +38,12 @@ public class AreaServiceImpl implements AreaService {
     }
 
     private void validarDatos(AreaDTO areaDTO) {
+        final int MAX_LENGHT_NOMBRE = 255;
+
+        if (areaDTO.nombre().length() > MAX_LENGHT_NOMBRE) {
+            throw new AreaException(AreaException.NOMBRE_NO_VALIDO);
+        }
+
         if (areaDTO.nombre().isEmpty()) {
             throw new AreaException(AreaException.NOMBRE_NO_VALIDO);
         }
