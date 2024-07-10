@@ -92,6 +92,30 @@ public class ClienteRepositoryTest {
 
     @Test
     public void testListar_DadoNoParametros_RetornaListaClientes() {
+        // Arrange
+        Cliente cliente1 = new Cliente();
+        cliente1.setNombre("Juan");
+        cliente1.setApellidoPaterno("Perez");
+        cliente1.setApellidoMaterno("Gomez");
+        cliente1.setNumeroDocumento("12345678");
+        cliente1.setFechaNacimiento(new Date(1990, 1, 1));
+        cliente1.setSexo("M");
+        cliente1.setTelefono("123456789");
+        cliente1.setEmail("juan@gmail.com");
+        clienteRepository.save(cliente1);
+
+        Cliente cliente2 = new Cliente();
+        cliente2.setNombre("Maria");
+        cliente2.setApellidoPaterno("Torres");
+        cliente2.setApellidoMaterno("Sanchez");
+        cliente2.setNumeroDocumento("87654321");
+        cliente2.setFechaNacimiento(new Date(1995, 1, 1));
+        cliente2.setSexo("F");
+        cliente2.setTelefono("987654321");
+        cliente2.setEmail("maria@gmail.com");
+        clienteRepository.save(cliente2);
+
+
         // Act
         List<Cliente> clientes = clienteRepository.findAll();
 
