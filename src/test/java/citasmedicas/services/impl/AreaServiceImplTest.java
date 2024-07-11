@@ -150,11 +150,8 @@ public class AreaServiceImplTest {
 
     @Test
     public void testObtenerPorId_DadoIdVacio_RetornaError() {
-        //Arrange
-        Integer id = null;
-
         //Act & Assert
-        assertThrows(AreaException.class, () -> service.obtenerPorId(id));
+        assertThrows(AreaException.class, () -> service.obtenerPorId(null));
     }
 
     @Test
