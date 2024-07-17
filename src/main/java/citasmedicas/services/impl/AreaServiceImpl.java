@@ -6,6 +6,7 @@ import citasmedicas.models.entities.Area;
 import citasmedicas.models.mappers.AreaMapper;
 import citasmedicas.repositories.AreaRepository;
 import citasmedicas.services.AreaService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,18 +24,16 @@ public class AreaServiceImpl implements AreaService {
     @Override
     public AreaDTO obtenerPorNombre(String nombre) {
         Optional<Area> area = repository.findByNombre(nombre);
-        if (area.isPresent()) {
-            return areaMapper.areaToAreaDTO(area.get());
-        }
-        return null;
+        return area.map(areaMapper::areaToAreaDTO).orElse(null);
     }
 
     @Override
+    @Transactional(rollbackOn = AreaException.class)
     public AreaDTO guardar(AreaDTO areaDTO) {
         validarDatos(areaDTO);
         Area area = areaMapper.areaDTOToArea(areaDTO);
-        Area newArea = repository.save(area);
-        return areaMapper.areaToAreaDTO(newArea);
+        Area areaGuardada = repository.save(area);
+        return areaMapper.areaToAreaDTO(areaGuardada);
     }
 
     private void validarDatos(AreaDTO areaDTO) {
@@ -60,6 +59,7 @@ public class AreaServiceImpl implements AreaService {
     }
 
     @Override
+    @Transactional(rollbackOn = AreaException.class)
     public AreaDTO actualizar(AreaDTO areaDTO, Integer id) {
         Optional<Area> areaEncontrado = repository.findById(id);
         if (areaEncontrado.isPresent()) {
@@ -70,21 +70,18 @@ public class AreaServiceImpl implements AreaService {
         return null;
     }
 
-    private Area asignarDatosActualizar(AreaDTO areaDTO, Optional<Area> areaConsultado) {
-        Area area = areaMapper.areaDTOToArea(areaDTO);
-        areaConsultado.ifPresent(dto -> area.setId(dto.getId()));
-        return area;
-    }
-
     @Override
     public AreaDTO obtenerPorId(Integer id) {
         validarId(id);
 
         Optional<Area> area = repository.findById(id);
-        if (area.isPresent()) {
-            return areaMapper.areaToAreaDTO(area.get());
-        }
-        return null;
+        return area.map(areaMapper::areaToAreaDTO).orElse(null);
+    }
+
+    private Area asignarDatosActualizar(AreaDTO areaDTO, Optional<Area> areaConsultado) {
+        Area area = areaMapper.areaDTOToArea(areaDTO);
+        areaConsultado.ifPresent(dto -> area.setId(dto.getId()));
+        return area;
     }
 
     private void validarId(Integer id) {
