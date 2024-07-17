@@ -65,7 +65,8 @@ public class AreaServiceImpl implements AreaService {
         if (areaEncontrado.isPresent()) {
             validarDatos(areaDTO);
             Area area = asignarDatosActualizar(areaDTO, areaEncontrado);
-            return areaMapper.areaToAreaDTO(repository.save(area));
+            Area areaActualizada = repository.save(area);
+            return areaMapper.areaToAreaDTO(areaActualizada);
         }
         return null;
     }
