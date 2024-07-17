@@ -6,6 +6,7 @@ import citasmedicas.models.entities.TipoEmpleado;
 import citasmedicas.models.mappers.TipoEmpleadoMapper;
 import citasmedicas.repositories.TipoEmpleadoRepository;
 import citasmedicas.services.TipoEmpleadoService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,8 +27,14 @@ public class TipoEmpleadoServiceImpl implements TipoEmpleadoService {
         return tipoEmpleadoMapper.tipoEmpleadosToTipoEmpleadosDTO(tiposEmpleados);
     }
 
+    private void validarDatosTipoEmpleado(TipoEmpleadoDTO tipoEmpleadoDTO) {
+        verificarNombre(tipoEmpleadoDTO.nombre());
+    }
+
     @Override
+    @Transactional
     public TipoEmpleadoDTO guardar(TipoEmpleadoDTO tipoEmpleadoDTO) {
+        validarDatosTipoEmpleado(tipoEmpleadoDTO);
         TipoEmpleado tipoEmpleado = tipoEmpleadoMapper.tipoEmpleadoDTOToTipoEmpleado(tipoEmpleadoDTO);
         buscarPorNombre(tipoEmpleado.getNombre());
         TipoEmpleado tipoEmpleadoGuardado = repository.save(tipoEmpleado);
@@ -36,23 +43,38 @@ public class TipoEmpleadoServiceImpl implements TipoEmpleadoService {
 
     @Override
     public TipoEmpleadoDTO buscarPorId(Integer id) {
+        verificarId(id);
         Optional<TipoEmpleado> tipoEmpleado = repository.findById(id);
-        if (tipoEmpleado.isEmpty()) {
+        if (tipoEmpleado.isPresent()) {
+            return tipoEmpleadoMapper.tipoEmpleadoToTipoEmpleadoDTO(tipoEmpleado.get());
+        }
+        return null;
+    }
+
+    private void verificarNombre(String nombre) {
+        if (nombre.isEmpty()) {
+            throw new TipoEmpleadoException(TipoEmpleadoException.NOMBRE_VACIO);
+        }
+    }
+
+    private void verificarId(Integer id) {
+        if (id == null || id <= 0) {
             throw new TipoEmpleadoException(TipoEmpleadoException.ID_NO_EXISTE);
         }
-        return tipoEmpleadoMapper.tipoEmpleadoToTipoEmpleadoDTO(tipoEmpleado.get());
     }
 
     @Override
     public TipoEmpleadoDTO buscarPorNombre(String nombre) {
+        verificarNombre(nombre);
         Optional<TipoEmpleado> tipoEmpleado = repository.findByNombre(nombre);
-        if (tipoEmpleado.isEmpty()) {
-            throw new TipoEmpleadoException(TipoEmpleadoException.NOMBRE_NO_EXISTE);
+        if (tipoEmpleado.isPresent()) {
+            return tipoEmpleadoMapper.tipoEmpleadoToTipoEmpleadoDTO(tipoEmpleado.get());
         }
-        return tipoEmpleadoMapper.tipoEmpleadoToTipoEmpleadoDTO(tipoEmpleado.get());
+        return null;
     }
 
     @Override
+    @Transactional
     public TipoEmpleadoDTO actualizar(TipoEmpleadoDTO tipoEmpleadoDTO) {
         TipoEmpleado tipoEmpleado = tipoEmpleadoMapper.tipoEmpleadoDTOToTipoEmpleado(tipoEmpleadoDTO);
         Optional<TipoEmpleado> tipoEmpleadoEncontrado = repository.findById(tipoEmpleado.getId());

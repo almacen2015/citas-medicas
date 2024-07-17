@@ -11,14 +11,12 @@ public class TipoEmpleado {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nombre;
-    private Boolean estado;
 
     public TipoEmpleado() {
     }
 
-    public TipoEmpleado(String nombre, Boolean estado) {
+    public TipoEmpleado(String nombre) {
         this.nombre = nombre;
-        this.estado = estado;
     }
 
     public Integer getId() {
@@ -37,25 +35,17 @@ public class TipoEmpleado {
         this.nombre = nombre;
     }
 
-    public Boolean getEstado() {
-        return estado;
-    }
-
-    public void setEstado(Boolean estado) {
-        this.estado = estado;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TipoEmpleado that = (TipoEmpleado) o;
-        return Objects.equals(id, that.id) && Objects.equals(nombre, that.nombre) && Objects.equals(estado, that.estado);
+        return Objects.equals(id, that.id) && Objects.equals(nombre, that.nombre);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nombre, estado);
+        return Objects.hash(id, nombre);
     }
 
     @Override
@@ -63,7 +53,6 @@ public class TipoEmpleado {
         return "TipoEmpleado{" +
                 "id='" + id + '\'' +
                 ", nombre='" + nombre + '\'' +
-                ", estado=" + estado +
                 '}';
     }
 }
