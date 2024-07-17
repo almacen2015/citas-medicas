@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -35,6 +36,27 @@ public class TipoEmpleadoRepositoryTest {
 
         // Assert
         assertThat(tiposEmpleados.size()).isGreaterThan(1);
+    }
 
+    @Test
+    public void testFindByNombre_DadoNombreValido_RetornaTipoEmpleado() {
+        //Arrange
+        TipoEmpleado tipoEmpleado = new TipoEmpleado("Medico General");
+        repository.save(tipoEmpleado);
+        TipoEmpleado tipoEmpleado2 = new TipoEmpleado("Enfermero");
+        repository.save(tipoEmpleado2);
+
+        //Act
+        Optional<TipoEmpleado> tipoEmpleadoEncontrado = repository.findByNombre("Medico General");
+        Optional<TipoEmpleado> tipoEmpleadoEncontrado2 = repository.findByNombre("Enfermero");
+
+        //Assert
+        assertThat(tipoEmpleadoEncontrado).isNotNull();
+        assertThat(tipoEmpleadoEncontrado.isPresent()).isTrue();
+        assertThat(tipoEmpleadoEncontrado.get().getNombre()).isEqualTo("Medico General");
+
+        assertThat(tipoEmpleadoEncontrado2).isNotNull();
+        assertThat(tipoEmpleadoEncontrado2.isPresent()).isTrue();
+        assertThat(tipoEmpleadoEncontrado2.get().getNombre()).isEqualTo("Enfermero");
     }
 }
