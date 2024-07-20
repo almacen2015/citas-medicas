@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -80,7 +81,7 @@ public class TipoEmpleadoServiceImplTest {
         TipoEmpleadoDTO tipoEmpleadoDTO = new TipoEmpleadoDTO(1, null);
 
         //Assert
-        assertThrows(TipoEmpleadoException.class,()-> service.guardar(tipoEmpleadoDTO));
+        assertThrows(TipoEmpleadoException.class, () -> service.guardar(tipoEmpleadoDTO));
     }
 
     @Test
@@ -96,7 +97,51 @@ public class TipoEmpleadoServiceImplTest {
         when(repository.findByNombre(tipoEmpleado.getNombre())).thenReturn(Optional.of(tipoEmpleado));
 
         //Assert
-        assertThrows(TipoEmpleadoException.class, ()-> service.guardar(tipoEmpleadoDTO));
+        assertThrows(TipoEmpleadoException.class, () -> service.guardar(tipoEmpleadoDTO));
 
+    }
+
+    @Test
+    public void testBuscarPorId_DadoIdTipoEmpleadoValido_RetornaTipoEmpleado() {
+        TipoEmpleado tipoEmpleado = new TipoEmpleado();
+        tipoEmpleado.setId(1);
+        tipoEmpleado.setNombre("Enfermera");
+
+        final int id = 1;
+        when(repository.findById(id)).thenReturn(Optional.of(tipoEmpleado));
+
+        TipoEmpleadoDTO tipoEmpleadoEncontrado = service.buscarPorId(id);
+
+        assertThat(tipoEmpleadoEncontrado).isNotNull();
+        assertThat(tipoEmpleadoEncontrado.id()).isGreaterThan(0);
+        assertThat(tipoEmpleadoEncontrado.id()).isEqualTo(1);
+        assertThat(tipoEmpleadoEncontrado.nombre()).isEqualTo("Enfermera");
+    }
+
+    @Test
+    public void testBuscarPorId_DadoIdTipoEmpleadoNull_RetornaError() {
+        assertThrows(TipoEmpleadoException.class, () -> service.buscarPorId(null));
+    }
+
+    @Test
+    public void testBuscarPorId_DadoIdTipoEmpleadoZero_RetornaError() {
+        final int id = 0;
+        assertThrows(TipoEmpleadoException.class, () -> service.buscarPorId(id));
+    }
+
+    @Test
+    public void testBuscarPorId_DadoIdTipoEmpleadoMenorZero_RetornaError() {
+        final int id = -1;
+        assertThrows(TipoEmpleadoException.class, () -> service.buscarPorId(id));
+    }
+
+    @Test
+    public void testBuscarPorId_DadoIdTipoEmpleadoNoExiste_RetornNull() {
+        final int id = 9999;
+        when(repository.findById(id)).thenReturn(Optional.empty());
+
+        TipoEmpleadoDTO tipoEmpleadoEncontrado = service.buscarPorId(id);
+
+        assertNull(tipoEmpleadoEncontrado);
     }
 }
