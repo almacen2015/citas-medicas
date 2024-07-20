@@ -55,7 +55,7 @@ public class TipoEmpleadoServiceImpl implements TipoEmpleadoService {
     }
 
     private void verificarNombre(String nombre) {
-        if (nombre == null || nombre.isEmpty()) {
+        if (nombre == null || nombre.isEmpty() || nombre.isBlank()) {
             throw new TipoEmpleadoException(TipoEmpleadoException.NOMBRE_VACIO);
         }
     }

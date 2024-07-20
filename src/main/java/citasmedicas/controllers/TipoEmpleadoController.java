@@ -42,7 +42,7 @@ public class TipoEmpleadoController {
         return service.buscarPorNombre(nombre);
     }
 
-    @Operation(summary = "Actualiza un tipo de empleado", description = "Recibe un tipo de empleado")
+    @Operation(summary = "Elimina un tipo de empleado", description = "Recibe un tipo de empleado")
     @DeleteMapping("/{id}")
     public void eliminar(@PathVariable Integer id) {
         service.eliminar(id);

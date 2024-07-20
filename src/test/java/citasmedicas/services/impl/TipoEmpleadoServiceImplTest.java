@@ -144,4 +144,38 @@ public class TipoEmpleadoServiceImplTest {
 
         assertNull(tipoEmpleadoEncontrado);
     }
+
+    @Test
+    public void testBuscarPorNombre_DadoNombreValido_RetornaTipoEmpleado() {
+        TipoEmpleado tipoEmpleado = new TipoEmpleado();
+        tipoEmpleado.setId(1);
+        tipoEmpleado.setNombre("Enfermera");
+
+        final String nombre = "Enfermera";
+
+        when(repository.findByNombre(nombre)).thenReturn(Optional.of(tipoEmpleado));
+
+        TipoEmpleadoDTO tipoEmpleadoEncontrado = service.buscarPorNombre(nombre);
+
+        assertThat(tipoEmpleadoEncontrado).isNotNull();
+        assertThat(tipoEmpleadoEncontrado.id()).isEqualTo(1);
+        assertThat(tipoEmpleadoEncontrado.nombre()).isEqualTo("Enfermera");
+    }
+
+    @Test
+    public void testBuscarPorNombre_DadoNombreNull_RetornaError() {
+        assertThrows(TipoEmpleadoException.class, ()-> service.buscarPorNombre(null));
+    }
+
+    @Test
+    public void testBuscarPorNombre_DadoNombreVacio_RetornaError() {
+        final String nombre = "";
+        assertThrows(TipoEmpleadoException.class, ()-> service.buscarPorNombre(nombre));
+    }
+
+    @Test
+    public void testBuscarPorNombre_DadoNombreEspaciosBlanco_RetornaError() {
+        final String nombre = "      ";
+        assertThrows(TipoEmpleadoException.class, ()-> service.buscarPorNombre(nombre));
+    }
 }
