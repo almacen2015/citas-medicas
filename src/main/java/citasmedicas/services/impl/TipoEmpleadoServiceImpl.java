@@ -36,7 +36,10 @@ public class TipoEmpleadoServiceImpl implements TipoEmpleadoService {
     public TipoEmpleadoDTO guardar(TipoEmpleadoDTO tipoEmpleadoDTO) {
         validarDatosTipoEmpleado(tipoEmpleadoDTO);
         TipoEmpleado tipoEmpleado = tipoEmpleadoMapper.tipoEmpleadoDTOToTipoEmpleado(tipoEmpleadoDTO);
-        buscarPorNombre(tipoEmpleado.getNombre());
+        Optional<TipoEmpleadoDTO> tipoEmpleadoEncontrado = Optional.ofNullable(buscarPorNombre(tipoEmpleado.getNombre()));
+        if (tipoEmpleadoEncontrado.isPresent()) {
+            throw new TipoEmpleadoException(TipoEmpleadoException.NOMBRE_EXISTE);
+        }
         TipoEmpleado tipoEmpleadoGuardado = repository.save(tipoEmpleado);
         return tipoEmpleadoMapper.tipoEmpleadoToTipoEmpleadoDTO(tipoEmpleadoGuardado);
     }
@@ -52,7 +55,7 @@ public class TipoEmpleadoServiceImpl implements TipoEmpleadoService {
     }
 
     private void verificarNombre(String nombre) {
-        if (nombre.isEmpty()) {
+        if (nombre == null || nombre.isEmpty()) {
             throw new TipoEmpleadoException(TipoEmpleadoException.NOMBRE_VACIO);
         }
     }

@@ -70,8 +70,10 @@ public class AreaRepositoryTest {
         area2.setEstado(true);
         areaRepository.save(area2);
 
+        //Act
         List<Area> areas = areaRepository.findAll();
 
+        //Assert
         assertThat(areas.size()).isGreaterThan(1);
     }
 
