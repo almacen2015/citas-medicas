@@ -76,6 +76,16 @@ public class TipoEmpleadoServiceImplTest {
     }
 
     @Test
+    public void testGuardar_DadoNombreTipoEmpleadoMayor255Caracteres_RetornaError() {
+        //Arrange
+        TipoEmpleadoDTO tipoEmpleadoDTO = new TipoEmpleadoDTO(1, "a".repeat(256));
+
+        //Assert
+        assertThrows(TipoEmpleadoException.class, () -> service.guardar(tipoEmpleadoDTO));
+
+    }
+
+    @Test
     public void testGuardar_DadoNombreTipoEmpleadoNull_RetornaError() {
         //Arrange
         TipoEmpleadoDTO tipoEmpleadoDTO = new TipoEmpleadoDTO(1, null);
@@ -180,6 +190,16 @@ public class TipoEmpleadoServiceImplTest {
     }
 
     @Test
+    public void testBuscarPorNombre_DadoNombreNoExiste_RetornaError() {
+        final String nombre = "TTT";
+
+        when(repository.findByNombre(nombre)).thenReturn(Optional.empty());
+        TipoEmpleadoDTO tipoEmpleadoEncontrado = service.buscarPorNombre(nombre);
+
+        assertThat(tipoEmpleadoEncontrado).isNull();
+    }
+
+    @Test
     public void testActualizar_DadoTipoEmpleadoValido_RetornaTipoEmpleado() {
         TipoEmpleado tipoEmpleado = new TipoEmpleado(1, "Enfermera");
         TipoEmpleadoDTO tipoEmpleadoParaGuardar = new TipoEmpleadoDTO(1, "Medico");
@@ -235,6 +255,12 @@ public class TipoEmpleadoServiceImplTest {
     @Test
     public void testActualizar_DadoNombreEspacioBlanco_RetornaError() {
         TipoEmpleadoDTO tipoEmpleadoDTO = new TipoEmpleadoDTO(1, "    ");
+        assertThrows(TipoEmpleadoException.class, () -> service.actualizar(tipoEmpleadoDTO));
+    }
+
+    @Test
+    public void testActualizar_DadoNombreMayor255Caracteres_RetornaError() {
+        TipoEmpleadoDTO tipoEmpleadoDTO = new TipoEmpleadoDTO(1, "a".repeat(256));
         assertThrows(TipoEmpleadoException.class, () -> service.actualizar(tipoEmpleadoDTO));
     }
 

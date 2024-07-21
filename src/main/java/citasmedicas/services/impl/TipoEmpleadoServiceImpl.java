@@ -58,6 +58,10 @@ public class TipoEmpleadoServiceImpl implements TipoEmpleadoService {
         if (nombre == null || nombre.isEmpty() || nombre.isBlank()) {
             throw new TipoEmpleadoException(TipoEmpleadoException.NOMBRE_VACIO);
         }
+
+        if (nombre.length() > 255) {
+            throw new TipoEmpleadoException(TipoEmpleadoException.NOMBRE_EXCESO_CARACTERES);
+        }
     }
 
     private void verificarId(Integer id) {
