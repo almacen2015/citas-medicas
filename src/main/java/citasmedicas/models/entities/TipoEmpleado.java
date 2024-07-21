@@ -15,6 +15,11 @@ public class TipoEmpleado {
     public TipoEmpleado() {
     }
 
+    public TipoEmpleado(Integer id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+
     public TipoEmpleado(String nombre) {
         this.nombre = nombre;
     }

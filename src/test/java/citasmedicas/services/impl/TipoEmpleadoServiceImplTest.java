@@ -164,18 +164,89 @@ public class TipoEmpleadoServiceImplTest {
 
     @Test
     public void testBuscarPorNombre_DadoNombreNull_RetornaError() {
-        assertThrows(TipoEmpleadoException.class, ()-> service.buscarPorNombre(null));
+        assertThrows(TipoEmpleadoException.class, () -> service.buscarPorNombre(null));
     }
 
     @Test
     public void testBuscarPorNombre_DadoNombreVacio_RetornaError() {
         final String nombre = "";
-        assertThrows(TipoEmpleadoException.class, ()-> service.buscarPorNombre(nombre));
+        assertThrows(TipoEmpleadoException.class, () -> service.buscarPorNombre(nombre));
     }
 
     @Test
     public void testBuscarPorNombre_DadoNombreEspaciosBlanco_RetornaError() {
         final String nombre = "      ";
-        assertThrows(TipoEmpleadoException.class, ()-> service.buscarPorNombre(nombre));
+        assertThrows(TipoEmpleadoException.class, () -> service.buscarPorNombre(nombre));
+    }
+
+    @Test
+    public void testActualizar_DadoTipoEmpleadoValido_RetornaTipoEmpleado() {
+        TipoEmpleado tipoEmpleado = new TipoEmpleado(1, "Enfermera");
+        TipoEmpleadoDTO tipoEmpleadoParaGuardar = new TipoEmpleadoDTO(1, "Medico");
+        TipoEmpleado tipoEmpleadoGuardado = new TipoEmpleado(1, "Medico");
+
+        when(repository.findById(tipoEmpleadoParaGuardar.id())).thenReturn(Optional.of(tipoEmpleado));
+        when(repository.findByNombre(tipoEmpleadoParaGuardar.nombre())).thenReturn(Optional.empty());
+        when(repository.save(tipoEmpleadoGuardado)).thenReturn(tipoEmpleadoGuardado);
+
+        TipoEmpleadoDTO tipoEmpleadoDTOGuardado = service.actualizar(tipoEmpleadoParaGuardar);
+
+        assertThat(tipoEmpleadoDTOGuardado).isNotNull();
+        assertThat(tipoEmpleadoDTOGuardado.nombre()).isEqualTo("Medico");
+        assertThat(tipoEmpleadoDTOGuardado.id()).isEqualTo(1);
+    }
+
+    @Test
+    public void testActualizar_DadoIdNull_RetornaError() {
+        TipoEmpleadoDTO tipoEmpleadoDTO = new TipoEmpleadoDTO(null, "Odontologo");
+        assertThrows(TipoEmpleadoException.class, () -> service.actualizar(tipoEmpleadoDTO));
+    }
+
+    @Test
+    public void testActualizar_DadoIdMenorZero_RetornaError() {
+        TipoEmpleadoDTO tipoEmpleadoDTO = new TipoEmpleadoDTO(-1, "Odontologo");
+        assertThrows(TipoEmpleadoException.class, () -> service.actualizar(tipoEmpleadoDTO));
+    }
+
+    @Test
+    public void testActualizar_DadoIdIgualZero_RetornaError() {
+        TipoEmpleadoDTO tipoEmpleadoDTO = new TipoEmpleadoDTO(0, "Odontologo");
+        assertThrows(TipoEmpleadoException.class, () -> service.actualizar(tipoEmpleadoDTO));
+    }
+
+    @Test
+    public void testActualizar_DadoIdNoEncontrado_RetornaError() {
+        TipoEmpleadoDTO tipoEmpleadoDTO = new TipoEmpleadoDTO(9999, "Odontologo");
+        assertThrows(TipoEmpleadoException.class, () -> service.actualizar(tipoEmpleadoDTO));
+    }
+
+    @Test
+    public void testActualizar_DadoNombreNull_RetornaError() {
+        TipoEmpleadoDTO tipoEmpleadoDTO = new TipoEmpleadoDTO(1, null);
+        assertThrows(TipoEmpleadoException.class, () -> service.actualizar(tipoEmpleadoDTO));
+    }
+
+    @Test
+    public void testActualizar_DadoNombreVacio_RetornaError() {
+        TipoEmpleadoDTO tipoEmpleadoDTO = new TipoEmpleadoDTO(1, "");
+        assertThrows(TipoEmpleadoException.class, () -> service.actualizar(tipoEmpleadoDTO));
+    }
+
+    @Test
+    public void testActualizar_DadoNombreEspacioBlanco_RetornaError() {
+        TipoEmpleadoDTO tipoEmpleadoDTO = new TipoEmpleadoDTO(1, "    ");
+        assertThrows(TipoEmpleadoException.class, () -> service.actualizar(tipoEmpleadoDTO));
+    }
+
+    @Test
+    public void testActualizar_DadoNombreEncontrado_RetornaError() {
+        TipoEmpleadoDTO tipoEmpleadoDTO = new TipoEmpleadoDTO(1, "Traumatólogo");
+        TipoEmpleado tipoEmpleadoEncontradoPorId = new TipoEmpleado(1, "Odontólogo");
+        TipoEmpleado tipoEmpleadoEncontradoPorNombre = new TipoEmpleado(2, "Traumatólogo");
+
+        when(repository.findById(tipoEmpleadoDTO.id())).thenReturn(Optional.of(tipoEmpleadoEncontradoPorId));
+        when(repository.findByNombre(tipoEmpleadoDTO.nombre())).thenReturn(Optional.of(tipoEmpleadoEncontradoPorNombre));
+
+        assertThrows(TipoEmpleadoException.class, () -> service.actualizar(tipoEmpleadoDTO));
     }
 }

@@ -80,12 +80,25 @@ public class TipoEmpleadoServiceImpl implements TipoEmpleadoService {
     @Transactional
     public TipoEmpleadoDTO actualizar(TipoEmpleadoDTO tipoEmpleadoDTO) {
         TipoEmpleado tipoEmpleado = tipoEmpleadoMapper.tipoEmpleadoDTOToTipoEmpleado(tipoEmpleadoDTO);
-        Optional<TipoEmpleado> tipoEmpleadoEncontrado = repository.findById(tipoEmpleado.getId());
-        if (tipoEmpleadoEncontrado.isEmpty()) {
+        Integer id = tipoEmpleado.getId();
+        String nombre = tipoEmpleado.getNombre();
+
+        verificarId(id);
+        verificarNombre(nombre);
+
+        Optional<TipoEmpleado> tipoEmpleadoIdEncontrado = repository.findById(id);
+        if (tipoEmpleadoIdEncontrado.isEmpty()) {
             throw new TipoEmpleadoException(TipoEmpleadoException.ID_NO_EXISTE);
         }
-        TipoEmpleado tipoEmpleadoActualizado = repository.save(tipoEmpleadoMapper.tipoEmpleadoDTOToTipoEmpleado(tipoEmpleadoDTO));
-        return tipoEmpleadoMapper.tipoEmpleadoToTipoEmpleadoDTO(tipoEmpleadoActualizado);
+
+        Optional<TipoEmpleado> nombreEncontrado = repository.findByNombre(nombre);
+        if (nombreEncontrado.isPresent()) {
+            throw new TipoEmpleadoException(TipoEmpleadoException.NOMBRE_EXISTE);
+        }
+
+        TipoEmpleado tipoEmpleadoActualizado = repository.save(tipoEmpleado);
+        TipoEmpleadoDTO tipoEmpleadoActualizadoDTO = tipoEmpleadoMapper.tipoEmpleadoToTipoEmpleadoDTO(tipoEmpleadoActualizado);
+        return tipoEmpleadoActualizadoDTO;
     }
 
     @Override
