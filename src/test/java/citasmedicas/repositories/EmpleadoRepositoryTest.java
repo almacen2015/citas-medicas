@@ -2,6 +2,7 @@ package citasmedicas.repositories;
 
 import citasmedicas.models.entities.Empleado;
 import citasmedicas.models.entities.TipoEmpleado;
+import citasmedicas.repositories.filtros.FiltroEmpleado;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -211,4 +212,327 @@ public class EmpleadoRepositoryTest {
         assertThat(empleadoEncontrado).isEmpty();
     }
 
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroValido_RetornaEmpleado() {
+        final String nombre = "Victor";
+        final String apellidoPaterno = "Orbegozo";
+        final String apellidoMaterno = "Percovich";
+        final String numeroDocumento = "70553916";
+        final Boolean estado = true;
+
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isNotEmpty();
+        assertThat(empleadosEncontrados.size()).isGreaterThan(0);
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroInvalido_RetornaVacio() {
+        final String nombre = "Victor";
+        final String apellidoPaterno = "Orbegozo";
+        final String apellidoMaterno = "Percovich";
+        final String numeroDocumento = "70553916";
+        final Boolean estado = false;
+
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isEmpty();
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroNull_RetornaEmpleados() {
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(null, null, null, null, null);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isNotEmpty();
+
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroVacio_RetornaEmpleados() {
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado("", "", "", "", null);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isNotEmpty();
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroEspaciosBlanco_RetornaEmpleados() {
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado("        ", "        ", "        ", "        ", null);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isNotEmpty();
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroNombreNull_RetornaEmpleados() {
+        final String apellidoPaterno = "Orbegozo";
+        final String apellidoMaterno = "Percovich";
+        final String numeroDocumento = "70553916";
+        final Boolean estado = true;
+
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(null, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isNotEmpty();
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroApellidoPaternoNull_RetornaEmpleados() {
+        final String nombre = "Victor";
+        final String apellidoMaterno = "Percovich";
+        final String numeroDocumento = "70553916";
+        final Boolean estado = true;
+
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, null, apellidoMaterno, numeroDocumento, estado);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isNotEmpty();
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroApellidoMaternoNull_RetornaEmpleados() {
+        final String nombre = "Victor";
+        final String apellidoPaterno = "Orbegozo";
+        final String numeroDocumento = "70553916";
+        final Boolean estado = true;
+
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, null, numeroDocumento, estado);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isNotEmpty();
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroNumeroDocumentoNull_RetornaEmpleados() {
+        final String nombre = "Victor";
+        final String apellidoPaterno = "Orbegozo";
+        final String apellidoMaterno = "Percovich";
+        final Boolean estado = true;
+
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, null, estado);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isNotEmpty();
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroEstadoNull_RetornaEmpleados() {
+        final String nombre = "Victor";
+        final String apellidoPaterno = "Orbegozo";
+        final String apellidoMaterno = "Percovich";
+        final String numeroDocumento = "70553916";
+
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, null);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isNotEmpty();
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroNombreVacio_RetornaEmpleados() {
+        final String nombre = "";
+        final String apellidoPaterno = "Orbegozo";
+        final String apellidoMaterno = "Percovich";
+        final String numeroDocumento = "70553916";
+        final Boolean estado = true;
+
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isNotEmpty();
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroApellidoPaternoVacio_RetornaEmpleados() {
+        final String nombre = "Victor";
+        final String apellidoPaterno = "";
+        final String apellidoMaterno = "Percovich";
+        final String numeroDocumento = "70553916";
+        final Boolean estado = true;
+
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isNotEmpty();
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroApellidoMaternoVacio_RetornaEmpleados() {
+        final String nombre = "Victor";
+        final String apellidoPaterno = "Orbegozo";
+        final String apellidoMaterno = "";
+        final String numeroDocumento = "70553916";
+        final Boolean estado = true;
+
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isNotEmpty();
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroNumeroDocumentoVacio_RetornaEmpleados() {
+        final String nombre = "Victor";
+        final String apellidoPaterno = "Orbegozo";
+        final String apellidoMaterno = "Percovich";
+        final String numeroDocumento = "";
+        final Boolean estado = true;
+
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isNotEmpty();
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroNombreEspaciosBlanco_RetornaEmpleados() {
+        final String nombre = "        ";
+        final String apellidoPaterno = "Orbegozo";
+        final String apellidoMaterno = "Percovich";
+        final String numeroDocumento = "70553916";
+        final Boolean estado = true;
+
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isNotEmpty();
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroApellidoPaternoEspaciosBlanco_RetornaEmpleados() {
+        final String nombre = "Victor";
+        final String apellidoPaterno = "        ";
+        final String apellidoMaterno = "Percovich";
+        final String numeroDocumento = "70553916";
+        final Boolean estado = true;
+
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isNotEmpty();
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroApellidoMaternoEspaciosBlanco_RetornaEmpleados() {
+        final String nombre = "Victor";
+        final String apellidoPaterno = "Orbegozo";
+        final String apellidoMaterno = "        ";
+        final String numeroDocumento = "70553916";
+        final Boolean estado = true;
+
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isNotEmpty();
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroNumeroDocumentoEspaciosBlanco_RetornaEmpleados() {
+        final String nombre = "Victor";
+        final String apellidoPaterno = "Orbegozo";
+        final String apellidoMaterno = "Percovich";
+        final String numeroDocumento = "        ";
+        final Boolean estado = true;
+
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isNotEmpty();
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroNombreNoEncontrado_RetornaVacio() {
+        final String nombre = "Pericles";
+        final String apellidoPaterno = "Orbegozo";
+        final String apellidoMaterno = "Percovich";
+        final String numeroDocumento = "70553916";
+        final Boolean estado = true;
+
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isEmpty();
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroApellidoPaternoNoEncontrado_RetornaVacio() {
+        final String nombre = "Victor";
+        final String apellidoPaterno = "Sala";
+        final String apellidoMaterno = "Percovich";
+        final String numeroDocumento = "70553916";
+        final Boolean estado = true;
+
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isEmpty();
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroApellidoMaternoNoEncontrado_RetornaVacio() {
+        final String nombre = "Victor";
+        final String apellidoPaterno = "Orbegozo";
+        final String apellidoMaterno = "Sala";
+        final String numeroDocumento = "70553916";
+        final Boolean estado = true;
+
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isEmpty();
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroNumeroDocumentoNoEncontrado_RetornaVacio() {
+        final String nombre = "Victor";
+        final String apellidoPaterno = "Orbegozo";
+        final String apellidoMaterno = "Percovich";
+        final String numeroDocumento = "99999999";
+        final Boolean estado = true;
+
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isEmpty();
+    }
+
+    @Test
+    public void testBuscarPorFiltroEmpleado_DadoFiltroEstadoNoEncontrado_RetornaVacio() {
+        final String nombre = "Victor";
+        final String apellidoPaterno = "Orbegozo";
+        final String apellidoMaterno = "Percovich";
+        final String numeroDocumento = "70553916";
+        final Boolean estado = false;
+
+        FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
+
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+
+        assertThat(empleadosEncontrados).isEmpty();
+    }
 }

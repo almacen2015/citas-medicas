@@ -6,5 +6,6 @@ import citasmedicas.repositories.filtros.FiltroEmpleado;
 import java.util.List;
 
 public interface EmpleadoRepositoryCustom {
-    List<Empleado> buscarEmpleado(FiltroEmpleado filtroEmpleado);
+    List<Empleado> buscarPorFiltroEmpleado(FiltroEmpleado filtroEmpleado);
+
 }
