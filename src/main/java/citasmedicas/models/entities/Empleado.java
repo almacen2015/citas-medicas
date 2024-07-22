@@ -31,6 +31,16 @@ public class Empleado {
         this.estado = estado;
     }
 
+    public Empleado(Integer id, String nombre, String apellidoPaterno, String apellidoMaterno, String numeroDocumento, TipoEmpleado tipoEmpleado, Boolean estado) {
+        this.id = id;
+        this.nombre = nombre;
+        this.apellidoPaterno = apellidoPaterno;
+        this.apellidoMaterno = apellidoMaterno;
+        this.numeroDocumento = numeroDocumento;
+        this.tipoEmpleado = tipoEmpleado;
+        this.estado = estado;
+    }
+
     public Integer getId() {
         return id;
     }
