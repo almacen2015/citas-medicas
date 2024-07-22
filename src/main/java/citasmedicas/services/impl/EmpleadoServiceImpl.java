@@ -2,6 +2,7 @@ package citasmedicas.services.impl;
 
 import citasmedicas.exceptions.EmpleadoException;
 import citasmedicas.models.dto.EmpleadoDTO;
+import citasmedicas.models.dto.TipoEmpleadoDTO;
 import citasmedicas.models.entities.Empleado;
 import citasmedicas.models.mappers.EmpleadoMapper;
 import citasmedicas.repositories.EmpleadoRepository;
@@ -22,6 +23,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
     @Override
     public EmpleadoDTO guardar(EmpleadoDTO empleadoDTO) {
+        verificarDatosParaGuardar(empleadoDTO);
         return null;
     }
 
@@ -54,5 +56,61 @@ public class EmpleadoServiceImpl implements EmpleadoService {
     public void eliminar(Integer id) {
         EmpleadoDTO empleadoDTO = buscarPorId(id);
         repository.deleteById(empleadoDTO.id());
+    }
+
+    private void verificarId(Integer id) {
+        if (id == null || id <= 0) {
+            throw new EmpleadoException(EmpleadoException.ID_NO_EXISTE);
+        }
+    }
+
+    private void verificarNombre(String nombre) {
+        if (nombre == null || nombre.isEmpty() || nombre.isBlank()) {
+            throw new EmpleadoException(EmpleadoException.NOMBRE_VACIO);
+        }
+        if (nombre.length() > 255) {
+            throw new EmpleadoException(EmpleadoException.NOMBRE_EXCESO_CARACTERES);
+        }
+    }
+
+    private void verificarApellidoPaterno(String apellidoPaterno) {
+        if (apellidoPaterno == null || apellidoPaterno.isEmpty() || apellidoPaterno.isBlank()) {
+            throw new EmpleadoException(EmpleadoException.APELLIDO_PATERNO_VACIO);
+        }
+        if (apellidoPaterno.length() > 255) {
+            throw new EmpleadoException(EmpleadoException.APELLIDO_PATERNO_EXCESO_CARACTERES);
+        }
+    }
+
+    private void verificarApellidoMaterno(String apellidoMaterno) {
+        if (apellidoMaterno == null || apellidoMaterno.isEmpty() || apellidoMaterno.isBlank()) {
+            throw new EmpleadoException(EmpleadoException.APELLIDO_MATERNO_VACIO);
+        }
+        if (apellidoMaterno.length() > 255) {
+            throw new EmpleadoException(EmpleadoException.APELLIDO_MATERNO_EXCESO_CARACTERES);
+        }
+    }
+
+    private void verificarTipoEmpleado(TipoEmpleadoDTO tipoEmpleado) {
+        if (tipoEmpleado == null) {
+            throw new EmpleadoException(EmpleadoException.TIPO_EMPLEADO_VACIO);
+        }
+    }
+
+    private void verificarNumeroDocumento(String numeroDocumento) {
+        if (numeroDocumento == null || numeroDocumento.isEmpty() || numeroDocumento.isBlank()) {
+            throw new EmpleadoException(EmpleadoException.NUMERO_DOCUMENTO_VACIO);
+        }
+        if (numeroDocumento.length() > 8) {
+            throw new EmpleadoException(EmpleadoException.NUMERO_DOCUMENTO_EXCESO_CARACTERES);
+        }
+    }
+
+    private void verificarDatosParaGuardar(EmpleadoDTO empleadoDTO) {
+        verificarNombre(empleadoDTO.nombre());
+        verificarApellidoPaterno(empleadoDTO.apellidoPaterno());
+        verificarApellidoMaterno(empleadoDTO.apellidoMaterno());
+        verificarTipoEmpleado(empleadoDTO.tipoEmpleadoDTO());
+        verificarNumeroDocumento(empleadoDTO.numeroDocumento());
     }
 }
