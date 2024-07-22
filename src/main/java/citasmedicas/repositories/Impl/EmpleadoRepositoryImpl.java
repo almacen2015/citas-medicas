@@ -5,10 +5,12 @@ import citasmedicas.repositories.customs.EmpleadoRepositoryCustom;
 import citasmedicas.repositories.filtros.FiltroEmpleado;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ public class EmpleadoRepositoryImpl implements EmpleadoRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
-    public List<Empleado> buscarPorFiltroEmpleado(FiltroEmpleado filtroEmpleado) {
+    public List<Empleado> buscarPorFiltroEmpleado(FiltroEmpleado filtroEmpleado, Pageable paginado) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Empleado> cq = cb.createQuery(Empleado.class);
         Root<Empleado> empleadoRoot = cq.from(Empleado.class);
@@ -56,7 +58,11 @@ public class EmpleadoRepositoryImpl implements EmpleadoRepositoryCustom {
 
         cq.where(cb.and(predicados.toArray(new Predicate[0])));
 
-        return entityManager.createQuery(cq).getResultList();
+        TypedQuery<Empleado> query = entityManager.createQuery(cq);
+        query.setMaxResults(paginado.getPageSize());
+        query.setFirstResult((int) paginado.getOffset());
+
+        return query.getResultList();
 
     }
 }

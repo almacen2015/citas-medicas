@@ -222,7 +222,7 @@ public class EmpleadoRepositoryTest {
 
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isNotEmpty();
         assertThat(empleadosEncontrados.size()).isGreaterThan(0);
@@ -238,7 +238,7 @@ public class EmpleadoRepositoryTest {
 
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isEmpty();
     }
@@ -247,7 +247,7 @@ public class EmpleadoRepositoryTest {
     public void testBuscarPorFiltroEmpleado_DadoFiltroNull_RetornaEmpleados() {
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(null, null, null, null, null);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isNotEmpty();
 
@@ -257,7 +257,7 @@ public class EmpleadoRepositoryTest {
     public void testBuscarPorFiltroEmpleado_DadoFiltroVacio_RetornaEmpleados() {
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado("", "", "", "", null);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isNotEmpty();
     }
@@ -266,7 +266,7 @@ public class EmpleadoRepositoryTest {
     public void testBuscarPorFiltroEmpleado_DadoFiltroEspaciosBlanco_RetornaEmpleados() {
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado("        ", "        ", "        ", "        ", null);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isNotEmpty();
     }
@@ -280,7 +280,7 @@ public class EmpleadoRepositoryTest {
 
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(null, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isNotEmpty();
     }
@@ -294,7 +294,7 @@ public class EmpleadoRepositoryTest {
 
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, null, apellidoMaterno, numeroDocumento, estado);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isNotEmpty();
     }
@@ -308,7 +308,7 @@ public class EmpleadoRepositoryTest {
 
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, null, numeroDocumento, estado);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isNotEmpty();
     }
@@ -322,7 +322,7 @@ public class EmpleadoRepositoryTest {
 
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, null, estado);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isNotEmpty();
     }
@@ -336,7 +336,7 @@ public class EmpleadoRepositoryTest {
 
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, null);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isNotEmpty();
     }
@@ -351,7 +351,7 @@ public class EmpleadoRepositoryTest {
 
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isNotEmpty();
     }
@@ -366,7 +366,7 @@ public class EmpleadoRepositoryTest {
 
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isNotEmpty();
     }
@@ -381,7 +381,7 @@ public class EmpleadoRepositoryTest {
 
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isNotEmpty();
     }
@@ -396,7 +396,7 @@ public class EmpleadoRepositoryTest {
 
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isNotEmpty();
     }
@@ -411,7 +411,7 @@ public class EmpleadoRepositoryTest {
 
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isNotEmpty();
     }
@@ -426,7 +426,7 @@ public class EmpleadoRepositoryTest {
 
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isNotEmpty();
     }
@@ -441,7 +441,7 @@ public class EmpleadoRepositoryTest {
 
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isNotEmpty();
     }
@@ -456,7 +456,7 @@ public class EmpleadoRepositoryTest {
 
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isNotEmpty();
     }
@@ -471,7 +471,7 @@ public class EmpleadoRepositoryTest {
 
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isEmpty();
     }
@@ -486,7 +486,7 @@ public class EmpleadoRepositoryTest {
 
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isEmpty();
     }
@@ -501,7 +501,7 @@ public class EmpleadoRepositoryTest {
 
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isEmpty();
     }
@@ -516,7 +516,7 @@ public class EmpleadoRepositoryTest {
 
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isEmpty();
     }
@@ -531,7 +531,7 @@ public class EmpleadoRepositoryTest {
 
         FiltroEmpleado filtroEmpleado = new FiltroEmpleado(nombre, apellidoPaterno, apellidoMaterno, numeroDocumento, estado);
 
-        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado);
+        List<Empleado> empleadosEncontrados = repository.buscarPorFiltroEmpleado(filtroEmpleado, paginado);
 
         assertThat(empleadosEncontrados).isEmpty();
     }
