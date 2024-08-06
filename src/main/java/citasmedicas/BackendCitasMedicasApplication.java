@@ -60,7 +60,7 @@ public class BackendCitasMedicasApplication {
                     .build();
 
             Usuario usuarioVictor = Usuario.builder()
-                    .username("Victor")
+                    .username("victor")
                     .password("1234")
                     .isEnabled(true)
                     .accountNoExpired(true)
@@ -70,7 +70,7 @@ public class BackendCitasMedicasApplication {
                     .build();
 
             Usuario usuarioLuis = Usuario.builder()
-                    .username("Luis")
+                    .username("luis")
                     .password("1234")
                     .isEnabled(true)
                     .accountNoExpired(true)
@@ -80,7 +80,7 @@ public class BackendCitasMedicasApplication {
                     .build();
 
             Usuario usuarioMartin = Usuario.builder()
-                    .username("Martin")
+                    .username("martin")
                     .password("1234")
                     .isEnabled(true)
                     .accountNoExpired(true)
