@@ -1,14 +1,23 @@
 package citasmedicas.services.impl;
 
+import citasmedicas.exceptions.EmpleadoException;
+import citasmedicas.models.dto.EmpleadoDTO;
 import citasmedicas.models.entities.Empleado;
 import citasmedicas.models.entities.TipoEmpleado;
 import citasmedicas.repositories.EmpleadoRepository;
 import citasmedicas.repositories.TipoEmpleadoRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class EmpleadoServiceImplTest {
@@ -48,5 +57,62 @@ public class EmpleadoServiceImplTest {
 
         repository.save(empleado);
         repository.save(empleado2);
+    }
+
+    @Test
+    public void testBuscarPorNumeroDocumento_DadoNumeroDocumentoValido_RetornaEmpleado() {
+        TipoEmpleado tipoEmpleado = new TipoEmpleado(1, "Medico");
+        Empleado empleado = Empleado.builder()
+                .id(1)
+                .nombre("Juan")
+                .apellidoPaterno("Pérez")
+                .apellidoMaterno("Gómez")
+                .numeroDocumento("12345678")
+                .tipoEmpleado(tipoEmpleado)
+                .build();
+
+        final String numeroDocumento = "12345678";
+
+        when(repository.findByNumeroDocumento(numeroDocumento)).thenReturn(Optional.of(empleado));
+
+        EmpleadoDTO empleadoDTO = service.buscarPorNumeroDocumento(numeroDocumento);
+
+        assertThat(empleadoDTO).isNotNull();
+    }
+
+    @Test
+    public void testBuscarPorNumeroDocumento_DadoNumeroDocumentoVacio_RetornaError() {
+        String numeroDocumento = "";
+
+        assertThrows(EmpleadoException.class,
+                () -> service.buscarPorNumeroDocumento(numeroDocumento));
+    }
+
+    @Test
+    public void testBuscarPorNumeroDocumento_DadoNumeroDocumentoEsNull_RetornaError() {
+        assertThrows(EmpleadoException.class, () -> service.buscarPorNumeroDocumento(null));
+    }
+
+    @Test
+    public void testBuscarPorNumeroDocumento_DadoNumeroDocumentoEspaciosBlanco_RetornaError() {
+        final String numeroDocumento = "     ";
+        assertThrows(EmpleadoException.class,
+                () -> service.buscarPorNumeroDocumento(numeroDocumento));
+    }
+
+    @Test
+    public void testBuscarPorNumeroDocumento_DadoNumeroDocumentoCaracteresMayor8_RetornaError() {
+        final String numeroDocumento = "123456789";
+        assertThrows(EmpleadoException.class,
+                () -> service.buscarPorNumeroDocumento(numeroDocumento));
+    }
+
+    @Test
+    public void testBuscarPorNumeroDocumento_DadoNumeroDocumentoCaracteresMenor8_RetornaEmpleadoNoEncontrado() {
+        final String numeroDocumento = "123456";
+        EmpleadoException exception = assertThrows(EmpleadoException.class,
+                () -> service.buscarPorNumeroDocumento(numeroDocumento));
+
+        assertThat("EMPLEADO_NO_ENCONTRADO").isEqualTo(exception.getMessage());
     }
 }

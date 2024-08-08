@@ -7,6 +7,7 @@ import citasmedicas.models.entities.Empleado;
 import citasmedicas.models.mappers.EmpleadoMapper;
 import citasmedicas.repositories.EmpleadoRepository;
 import citasmedicas.services.EmpleadoService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,13 +23,18 @@ public class EmpleadoServiceImpl implements EmpleadoService {
     }
 
     @Override
+    @Transactional
     public EmpleadoDTO guardar(EmpleadoDTO empleadoDTO) {
         verificarDatosParaGuardar(empleadoDTO);
-        return null;
+        Empleado empleado = mapper.empleadoDTOToEmpleado(empleadoDTO);
+        Empleado empleadoGuardado = repository.save(empleado);
+        EmpleadoDTO empleadoDTOGuardado = mapper.empleadoToEmpleadoDTO(empleadoGuardado);
+        return empleadoDTOGuardado;
     }
 
     @Override
     public EmpleadoDTO buscarPorId(Integer id) {
+        verificarId(id);
         Optional<Empleado> empleado = repository.findById(id);
         if (empleado.isEmpty()) {
             throw new EmpleadoException(EmpleadoException.ID_NO_EXISTE);
@@ -38,7 +44,10 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
     @Override
     public EmpleadoDTO buscarPorNumeroDocumento(String numeroDocumento) {
-        return null;
+        verificarNumeroDocumento(numeroDocumento);
+        Empleado empleadoEncontrado = repository.findByNumeroDocumento(numeroDocumento).orElseThrow(() -> new EmpleadoException(EmpleadoException.EMPLEADO_NO_ENCONTRADO));
+        EmpleadoDTO empleadoDTOEncontrado = mapper.empleadoToEmpleadoDTO(empleadoEncontrado);
+        return empleadoDTOEncontrado;
     }
 
     @Override
@@ -54,6 +63,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
     @Override
     public void eliminar(Integer id) {
+        verificarId(id);
         EmpleadoDTO empleadoDTO = buscarPorId(id);
         repository.deleteById(empleadoDTO.id());
     }

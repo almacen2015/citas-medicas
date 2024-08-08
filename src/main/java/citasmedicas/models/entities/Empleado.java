@@ -1,9 +1,15 @@
 package citasmedicas.models.entities;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Objects;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "empleados")
 public class Empleado {
@@ -15,87 +21,9 @@ public class Empleado {
     private String apellidoMaterno;
     private String numeroDocumento;
     @ManyToOne
-    @JoinColumn(referencedColumnName = "id")
+    @JoinColumn(name = "tipoempleado_id")
     private TipoEmpleado tipoEmpleado;
     private Boolean estado;
-
-    public Empleado() {
-    }
-
-    public Empleado(String nombre, String apellidoPaterno, String apellidoMaterno, String numeroDocumento, TipoEmpleado tipoEmpleado, Boolean estado) {
-        this.nombre = nombre;
-        this.apellidoPaterno = apellidoPaterno;
-        this.apellidoMaterno = apellidoMaterno;
-        this.numeroDocumento = numeroDocumento;
-        this.tipoEmpleado = tipoEmpleado;
-        this.estado = estado;
-    }
-
-    public Empleado(Integer id, String nombre, String apellidoPaterno, String apellidoMaterno, String numeroDocumento, TipoEmpleado tipoEmpleado, Boolean estado) {
-        this.id = id;
-        this.nombre = nombre;
-        this.apellidoPaterno = apellidoPaterno;
-        this.apellidoMaterno = apellidoMaterno;
-        this.numeroDocumento = numeroDocumento;
-        this.tipoEmpleado = tipoEmpleado;
-        this.estado = estado;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getApellidoPaterno() {
-        return apellidoPaterno;
-    }
-
-    public void setApellidoPaterno(String apellidoPaterno) {
-        this.apellidoPaterno = apellidoPaterno;
-    }
-
-    public String getApellidoMaterno() {
-        return apellidoMaterno;
-    }
-
-    public void setApellidoMaterno(String apellidoMaterno) {
-        this.apellidoMaterno = apellidoMaterno;
-    }
-
-    public String getNumeroDocumento() {
-        return numeroDocumento;
-    }
-
-    public void setNumeroDocumento(String numeroDocumento) {
-        this.numeroDocumento = numeroDocumento;
-    }
-
-    public TipoEmpleado getTipoEmpleado() {
-        return tipoEmpleado;
-    }
-
-    public void setTipoEmpleado(TipoEmpleado tipoEmpleado) {
-        this.tipoEmpleado = tipoEmpleado;
-    }
-
-    public Boolean getEstado() {
-        return estado;
-    }
-
-    public void setEstado(Boolean estado) {
-        this.estado = estado;
-    }
 
     @Override
     public String toString() {
