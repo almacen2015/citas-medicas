@@ -6,8 +6,11 @@ import citasmedicas.models.dto.TipoEmpleadoDTO;
 import citasmedicas.models.entities.Empleado;
 import citasmedicas.models.mappers.EmpleadoMapper;
 import citasmedicas.repositories.EmpleadoRepository;
+import citasmedicas.repositories.filtros.FiltroEmpleado;
 import citasmedicas.services.EmpleadoService;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +23,20 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
     public EmpleadoServiceImpl(EmpleadoRepository repository) {
         this.repository = repository;
+    }
+
+    @Override
+    public List<EmpleadoDTO> listarEmpleados(FiltroEmpleado filtro, Integer paginaInicio, Integer cantidadDatos) {
+        Pageable paginado = construirPaginado(paginaInicio, cantidadDatos);
+        List<Empleado> empleados = repository.buscarPorFiltroEmpleado(filtro, paginado);
+        return mapper.empleadosToEmpleadosDTO(empleados);
+    }
+
+    @Override
+    public List<EmpleadoDTO> listarPorEstado(boolean estado, Integer paginaInicio, Integer cantidadDatos) {
+        Pageable paginado = construirPaginado(paginaInicio, cantidadDatos);
+        List<Empleado> empleados = repository.findAllByEstado(estado, paginado);
+        return mapper.empleadosToEmpleadosDTO(empleados);
     }
 
     @Override
@@ -66,6 +83,15 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         verificarId(id);
         EmpleadoDTO empleadoDTO = buscarPorId(id);
         repository.deleteById(empleadoDTO.id());
+    }
+
+    private Pageable construirPaginado(Integer pagina, Integer cantidadDatos) {
+        if (pagina < 0 || cantidadDatos <= 0) {
+            throw new EmpleadoException(EmpleadoException.ERROR_PAGINADO);
+        }
+
+        Pageable pageable = PageRequest.of(pagina, cantidadDatos);
+        return pageable;
     }
 
     private void verificarId(Integer id) {

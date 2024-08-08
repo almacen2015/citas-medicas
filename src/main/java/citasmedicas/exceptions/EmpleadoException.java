@@ -12,6 +12,7 @@ public class EmpleadoException extends RuntimeException {
     public static final String APELLIDO_MATERNO_EXCESO_CARACTERES = "APELLIDO_MATERNO_EXCESO_CARACTERES";
     public static final String NUMERO_DOCUMENTO_EXCESO_CARACTERES = "NUMERO_DOCUMENTO_EXCESO_CARACTERES";
     public static final String EMPLEADO_NO_ENCONTRADO = "EMPLEADO_NO_ENCONTRADO";
+    public static final String ERROR_PAGINADO = "ERROR_PAGINADO";
 
     public EmpleadoException(String message) {
         super(message);

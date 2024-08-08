@@ -1,6 +1,7 @@
 package citasmedicas.services;
 
 import citasmedicas.models.dto.EmpleadoDTO;
+import citasmedicas.repositories.filtros.FiltroEmpleado;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -12,6 +13,10 @@ public interface EmpleadoService {
     EmpleadoDTO buscarPorId(Integer id);
 
     EmpleadoDTO buscarPorNumeroDocumento(String numeroDocumento);
+
+    List<EmpleadoDTO> listarPorEstado(boolean estado, Integer paginaInicio, Integer cantidadDatos);
+
+    List<EmpleadoDTO> listarEmpleados(FiltroEmpleado filtro, Integer paginaInicio, Integer cantidadDatos);
 
     EmpleadoDTO actualizar(EmpleadoDTO empleadoDTO);
 
