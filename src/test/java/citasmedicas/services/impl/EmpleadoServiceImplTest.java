@@ -60,6 +60,52 @@ public class EmpleadoServiceImplTest {
     }
 
     @Test
+    public void testBuscarPorId_DadoIdNoEncontrado_RetornaError() {
+        final int id = 1000;
+        assertThrows(EmpleadoException.class, () -> service.buscarPorId(id));
+    }
+
+    @Test
+    public void testBuscarPorId_DadoIdEsIgualO_RetornaError() {
+        final int id = 0;
+        assertThrows(EmpleadoException.class, () -> service.buscarPorId(id));
+    }
+
+    @Test
+    public void testBuscarPorId_DadoIdEsMenorO_RetornaError() {
+        final int id = -1;
+        assertThrows(EmpleadoException.class, () -> service.buscarPorId(id));
+    }
+
+    @Test
+    public void testBuscarPorId_DadoIdEsNull_RetornaError() {
+        assertThrows(EmpleadoException.class, () -> service.buscarPorId(null));
+    }
+
+    @Test
+    public void testBuscarPorId_DadoIdValido_RetornaEmpleado() {
+        TipoEmpleado tipoEmpleado = new TipoEmpleado(1, "Medico");
+        Empleado empleado = Empleado.builder()
+                .id(1)
+                .nombre("Juan")
+                .apellidoPaterno("Pérez")
+                .apellidoMaterno("Gómez")
+                .numeroDocumento("12345678")
+                .tipoEmpleado(tipoEmpleado)
+                .build();
+
+        final Integer id = 1;
+
+        when(repository.findById(id)).thenReturn(Optional.of(empleado));
+
+        EmpleadoDTO empleadoDTO = service.buscarPorId(id);
+
+        assertThat(empleadoDTO).isNotNull();
+        assertThat(empleadoDTO.nombre()).isEqualTo("Juan");
+        assertThat(empleadoDTO.id()).isEqualTo(1);
+    }
+
+    @Test
     public void testBuscarPorNumeroDocumento_DadoNumeroDocumentoValido_RetornaEmpleado() {
         TipoEmpleado tipoEmpleado = new TipoEmpleado(1, "Medico");
         Empleado empleado = Empleado.builder()

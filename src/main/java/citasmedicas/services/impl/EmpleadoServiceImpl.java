@@ -37,7 +37,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         verificarId(id);
         Optional<Empleado> empleado = repository.findById(id);
         if (empleado.isEmpty()) {
-            throw new EmpleadoException(EmpleadoException.ID_NO_EXISTE);
+            throw new EmpleadoException(EmpleadoException.EMPLEADO_NO_ENCONTRADO);
         }
         return mapper.empleadoToEmpleadoDTO(empleado.get());
     }
