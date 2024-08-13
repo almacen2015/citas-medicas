@@ -42,11 +42,23 @@ public class EmpleadoServiceImpl implements EmpleadoService {
     @Override
     @Transactional
     public EmpleadoDTO guardar(EmpleadoDTO empleadoDTO) {
-        verificarDatosParaGuardar(empleadoDTO);
+        verificarDatosEmpleadoParaGuardar(empleadoDTO);
+
+        final String numeroDocumento = empleadoDTO.numeroDocumento();
+        verficiarNumeroDocumentoEmpleadoExiste(numeroDocumento);
+
         Empleado empleado = mapper.empleadoDTOToEmpleado(empleadoDTO);
-        Empleado empleadoGuardado = repository.save(empleado);
-        EmpleadoDTO empleadoDTOGuardado = mapper.empleadoToEmpleadoDTO(empleadoGuardado);
-        return empleadoDTOGuardado;
+        empleado.setId(null);
+        repository.save(empleado);
+
+        return mapper.empleadoToEmpleadoDTO(empleado);
+    }
+
+    private void verficiarNumeroDocumentoEmpleadoExiste(String numeroDocumento) {
+        Optional<Empleado> empleadoExistente = repository.findByNumeroDocumento(numeroDocumento);
+        if (empleadoExistente.isPresent()) {
+            throw new EmpleadoException(EmpleadoException.ERROR_NUMERO_DOCUMENTO_EXISTE);
+        }
     }
 
     @Override
@@ -94,6 +106,12 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         return pageable;
     }
 
+    private void verificarIdParaGuardar(Integer id) {
+        if (id != null) {
+            throw new EmpleadoException(EmpleadoException.ERROR_ID_INVALIDO_GUARDAR);
+        }
+    }
+
     private void verificarId(Integer id) {
         if (id == null || id <= 0) {
             throw new EmpleadoException(EmpleadoException.ID_NO_EXISTE);
@@ -131,6 +149,14 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         if (tipoEmpleado == null) {
             throw new EmpleadoException(EmpleadoException.TIPO_EMPLEADO_VACIO);
         }
+
+        if (tipoEmpleado.id() == null || tipoEmpleado.id() <= 0) {
+            throw new EmpleadoException(EmpleadoException.ERROR_TIPO_EMPLEADO_ID_VACIO);
+        }
+
+        if (tipoEmpleado.nombre() == null || tipoEmpleado.nombre().isEmpty() || tipoEmpleado.nombre().isBlank()) {
+            throw new EmpleadoException(EmpleadoException.ERROR_TIPO_EMPLEADO_NOMBRE_VACIO);
+        }
     }
 
     private void verificarNumeroDocumento(String numeroDocumento) {
@@ -142,11 +168,26 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         }
     }
 
-    private void verificarDatosParaGuardar(EmpleadoDTO empleadoDTO) {
+    private void verificarEmpleadoDTO(EmpleadoDTO empleadoDTO) {
+        if (empleadoDTO == null) {
+            throw new EmpleadoException(EmpleadoException.ERROR_EMPLEADO_NULL);
+        }
+    }
+
+    public void verificarEstado(Boolean estado) {
+        if (estado == null) {
+            throw new EmpleadoException(EmpleadoException.ERROR_ESTADO_NULL);
+        }
+    }
+
+    private void verificarDatosEmpleadoParaGuardar(EmpleadoDTO empleadoDTO) {
+        verificarEmpleadoDTO(empleadoDTO);
+        verificarIdParaGuardar(empleadoDTO.id());
         verificarNombre(empleadoDTO.nombre());
         verificarApellidoPaterno(empleadoDTO.apellidoPaterno());
         verificarApellidoMaterno(empleadoDTO.apellidoMaterno());
         verificarTipoEmpleado(empleadoDTO.tipoEmpleadoDTO());
         verificarNumeroDocumento(empleadoDTO.numeroDocumento());
+        verificarEstado(empleadoDTO.estado());
     }
 }

@@ -2,6 +2,7 @@ package citasmedicas.services.impl;
 
 import citasmedicas.exceptions.EmpleadoException;
 import citasmedicas.models.dto.EmpleadoDTO;
+import citasmedicas.models.dto.TipoEmpleadoDTO;
 import citasmedicas.models.entities.Empleado;
 import citasmedicas.models.entities.TipoEmpleado;
 import citasmedicas.repositories.EmpleadoRepository;
@@ -72,6 +73,341 @@ public class EmpleadoServiceImplTest {
         repository.save(empleado);
         repository.save(empleado2);
     }
+
+    @Test
+    public void testGuardarEmpleado_DadoEstadoNull_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "70553916",
+                new TipoEmpleadoDTO(1, "Medico"),
+                null);
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void testGuardarEmpleado_DadoTipoEmpleadoIdNulo_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "70553916",
+                new TipoEmpleadoDTO(null, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void testGuardarEmpleado_DadoTipoEmpleadoNulo_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "70553916",
+                null,
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void testGuardarEmpleado_DadoNumeroDocumentoEspaciosBlanco_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "      ",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void testGuardarEmpleado_DadoNumeroDocumentoNull_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                null,
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void testGuardarEmpleado_DadoNumeroDocumentoMayor8Caracteres_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "123456789",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void testGuardarEmpleado_DadoNumeroDocumentoVacio_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void testGuardarEmpleado_DadoApellidoMaternoEspaciosBlanco_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "Victor",
+                "Orbegozo",
+                "    ",
+                "12345678",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void testGuardarEmpleado_DadoApellidoMaternoNull_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "Victor",
+                "Orbegozo",
+                null,
+                "12345678",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void testGuardarEmpleado_DadoApellidoMaternoVacio_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "Victor",
+                "Orbegozo",
+                "",
+                "12345678",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void testGuardarEmpleado_DadoApellidoMaternoMayor255Caracteres_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "Victor",
+                "Orbegozo",
+                "a".repeat(256),
+                "12345678",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void testGuardarEmpelado_DadoApellidoPaternoMayor255Caracteres_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "Victor",
+                "a".repeat(256),
+                "Percovich",
+                "12345678",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void testGuardarEmpleado_DadoApellidoPaternoEspaciosBlanco_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "Victor",
+                "    ",
+                "Percovich",
+                "12345678",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void TestGuardarEmpleado_DadoApellidoPaternoVacio_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "Victor",
+                "",
+                "Percovich",
+                "12345678",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void testGuardarEmpleado_DadoApellidoPaternoNull_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "Victor",
+                null,
+                "Percovich",
+                "12345678",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void testGuardarEmpleado_DadoNombreMayor255Caracteres_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "a".repeat(256),
+                "Orbegozo",
+                "Percovich",
+                "12345678",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void testGuardarEmpleado_DadoNombreEspaciosBlanco_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "                         ",
+                "Orbegozo",
+                "Percovich",
+                "12345678",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void testGuardarEmpleado_DadoNombreNull_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                null,
+                "Orbegozo",
+                "Percovich",
+                "12345678",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void testGuardarEmpleado_DadoNombreVacio_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "",
+                "Orbegozo",
+                "Percovich",
+                "12345678",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void testGuardarEmpleado_DadoIdDiferenteNull_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "12345678",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void testGuardarEmpleado_DadoEmpleadoConNumeroDocumentoExistente_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "12345678",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        when(repository.findByNumeroDocumento(empleadoDTO.numeroDocumento())).thenReturn(Optional.of(empleado));
+
+        assertThrows(EmpleadoException.class, () -> service.guardar(empleadoDTO));
+    }
+
+    @Test
+    public void testGuardarEmpleado_DadoEmpleadoNulo_RetornaError() {
+        assertThrows(EmpleadoException.class, () -> service.guardar(null));
+    }
+
+    @Test
+    public void testGuardarEmpleado_DadoEmpleadoValido_RetornaEmpleado() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "70553916",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        when(repository.findByNumeroDocumento(empleadoDTO.numeroDocumento())).thenReturn(Optional.empty());
+
+        Empleado empleado = new Empleado();
+        empleado.setNombre("Victor");
+        empleado.setApellidoPaterno("Orbegozo");
+        empleado.setApellidoMaterno("Percovich");
+        empleado.setNumeroDocumento("70553916");
+        empleado.setTipoEmpleado(new TipoEmpleado(1, "Medico"));
+        empleado.setEstado(true);
+
+        when(repository.save(empleado)).thenReturn(empleado);
+
+        EmpleadoDTO empleadoGuardado = service.guardar(empleadoDTO);
+
+        assertThat(empleadoGuardado).isNotNull();
+        assertThat(empleadoGuardado.nombre()).isEqualTo("Victor");
+        assertThat(empleadoGuardado.apellidoPaterno()).isEqualTo("Orbegozo");
+        assertThat(empleadoGuardado.apellidoMaterno()).isEqualTo("Percovich");
+        assertThat(empleadoGuardado.numeroDocumento()).isEqualTo("70553916");
+        assertThat(empleadoGuardado.tipoEmpleadoDTO().nombre()).isEqualTo("Medico");
+    }
+
 
     @Test
     public void testListarEmpleado_DadoFiltroSoloNombreYApellidoMaterno_RetornaEmpleado() {
