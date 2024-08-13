@@ -6,6 +6,7 @@ import citasmedicas.models.entities.Empleado;
 import citasmedicas.models.entities.TipoEmpleado;
 import citasmedicas.repositories.EmpleadoRepository;
 import citasmedicas.repositories.TipoEmpleadoRepository;
+import citasmedicas.repositories.filtros.FiltroEmpleado;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -70,6 +71,107 @@ public class EmpleadoServiceImplTest {
 
         repository.save(empleado);
         repository.save(empleado2);
+    }
+
+    @Test
+    public void testListarEmpleado_DadoFiltroSoloNombreYApellidoMaterno_RetornaEmpleado() {
+        FiltroEmpleado filtro = new FiltroEmpleado("Juan", "", "Gómez", "", true);
+        when(repository.buscarPorFiltroEmpleado(filtro, paginado)).thenReturn(Arrays.asList(empleado));
+
+        List<EmpleadoDTO> empleados = service.listarEmpleados(filtro, 0, 10);
+
+        assertThat(empleados).isNotEmpty();
+    }
+
+    @Test
+    public void testListarEmpleado_DadoFiltroSoloNombreYApellidoPaterno_RetornaEmpleado() {
+        FiltroEmpleado filtro = new FiltroEmpleado("Juan", "Pérez", "", "", true);
+        when(repository.buscarPorFiltroEmpleado(filtro, paginado)).thenReturn(Arrays.asList(empleado));
+
+        List<EmpleadoDTO> empleados = service.listarEmpleados(filtro, 0, 10);
+
+        assertThat(empleados).isNotEmpty();
+    }
+
+    @Test
+    public void testListarEmpleado_DadoFiltroSoloNumeroDocumento_RetornaEmpleado() {
+        FiltroEmpleado filtro = new FiltroEmpleado("", "", "", "12345678", true);
+        when(repository.buscarPorFiltroEmpleado(filtro, paginado)).thenReturn(Arrays.asList(empleado));
+
+        List<EmpleadoDTO> empleados = service.listarEmpleados(filtro, 0, 10);
+
+        assertThat(empleados).isNotEmpty();
+    }
+
+    @Test
+    public void testListarEmpleado_DadoFiltroSoloApellidoMaterno_RetornaEmpleado() {
+        FiltroEmpleado filtro = new FiltroEmpleado("", "", "Gómez", "", true);
+        when(repository.buscarPorFiltroEmpleado(filtro, paginado)).thenReturn(Arrays.asList(empleado));
+
+        List<EmpleadoDTO> empleados = service.listarEmpleados(filtro, 0, 10);
+
+        assertThat(empleados).isNotEmpty();
+    }
+
+    @Test
+    public void testListarEmpleado_DadoFiltroSoloApellidoPaterno_RetornaEmpleado() {
+        FiltroEmpleado filtro = new FiltroEmpleado("", "Pérez", "", "", true);
+        when(repository.buscarPorFiltroEmpleado(filtro, paginado)).thenReturn(Arrays.asList(empleado));
+
+        List<EmpleadoDTO> empleados = service.listarEmpleados(filtro, 0, 10);
+
+        assertThat(empleados).isNotEmpty();
+    }
+
+    @Test
+    public void testListarEmpleado_DadoFiltroSoloNombre_RetornaEmpleado() {
+        FiltroEmpleado filtro = new FiltroEmpleado("Juan", "", "", "", true);
+        when(repository.buscarPorFiltroEmpleado(filtro, paginado)).thenReturn(Arrays.asList(empleado));
+
+        List<EmpleadoDTO> empleados = service.listarEmpleados(filtro, 0, 10);
+
+        assertThat(empleados).isNotEmpty();
+    }
+
+    @Test
+    public void testListarEmpleado_DadoFiltroVacio_RetornaVacio() {
+        FiltroEmpleado filtro = new FiltroEmpleado("", "", "", "", true);
+        List<EmpleadoDTO> empleados = service.listarEmpleados(filtro, 0, 10);
+        assertThat(empleados).isEmpty();
+    }
+
+    @Test
+    public void testListarEmpleado_DadoFiltroNulo_RetornaVacio() {
+        List<EmpleadoDTO> empleados = service.listarEmpleados(null, 0, 10);
+        assertThat(empleados).isEmpty();
+    }
+
+    @Test
+    public void testListarEmpleado_DadoCantidadDatosIgual0_RetornaError() {
+        FiltroEmpleado filtro = new FiltroEmpleado("Juan", "Pérez", "Gómez", "12345678", true);
+        assertThrows(EmpleadoException.class, () -> service.listarEmpleados(filtro, 0, 0));
+    }
+
+    @Test
+    public void testListarEmpleado_DadoCantidadDatosMenor0_RetornaError() {
+        FiltroEmpleado filtro = new FiltroEmpleado("Juan", "Pérez", "Gómez", "12345678", true);
+        assertThrows(EmpleadoException.class, () -> service.listarEmpleados(filtro, 0, -1));
+    }
+
+    @Test
+    public void testListarEmpleado_DadoPaginaInicioMenor0_RetornaError() {
+        FiltroEmpleado filtro = new FiltroEmpleado("Juan", "Pérez", "Gómez", "12345678", true);
+        assertThrows(EmpleadoException.class, () -> service.listarEmpleados(filtro, -1, 10));
+    }
+
+    @Test
+    public void testListarEmpleado_DadoFiltroValido_RetornaEmpleado() {
+        FiltroEmpleado filtro = new FiltroEmpleado("Juan", "Pérez", "Gómez", "12345678", true);
+        when(repository.buscarPorFiltroEmpleado(filtro, paginado)).thenReturn(Arrays.asList(empleado));
+
+        List<EmpleadoDTO> empleados = service.listarEmpleados(filtro, 0, 10);
+
+        assertThat(empleados).isNotEmpty();
     }
 
     @Test
