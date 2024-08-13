@@ -36,23 +36,23 @@ public class EmpleadoRepositoryImpl implements EmpleadoRepositoryCustom {
 
         List<Predicate> predicados = new ArrayList<>();
 
-        if (nombre != null && !nombre.isEmpty() && !nombre.isBlank()) {
+        if (esDatoValido(nombre)) {
             predicados.add(cb.like(cb.lower(empleadoRoot.get("nombre")), "%" + nombre.toLowerCase() + "%"));
         }
 
-        if (apellidoPaterno != null && !apellidoPaterno.isEmpty() && !apellidoPaterno.isBlank()) {
+        if (esDatoValido(apellidoPaterno)) {
             predicados.add(cb.like(cb.lower(empleadoRoot.get("apellidoPaterno")), "%" + apellidoPaterno.toLowerCase() + "%"));
         }
 
-        if (apellidoMaterno != null && !apellidoMaterno.isEmpty() && !apellidoMaterno.isBlank()) {
+        if (esDatoValido(apellidoMaterno)) {
             predicados.add(cb.like(cb.lower(empleadoRoot.get("apellidoMaterno")), "%" + apellidoMaterno.toLowerCase() + "%"));
         }
 
-        if (numeroDocumento != null && !numeroDocumento.isEmpty() && !numeroDocumento.isBlank()) {
+        if (esDatoValido(numeroDocumento)) {
             predicados.add(cb.equal(empleadoRoot.get("numeroDocumento"), numeroDocumento));
         }
 
-        if (estado != null) {
+        if (esEstadoValido(estado)) {
             predicados.add(cb.equal(empleadoRoot.get("estado"), estado));
         }
 
@@ -64,5 +64,13 @@ public class EmpleadoRepositoryImpl implements EmpleadoRepositoryCustom {
 
         return query.getResultList();
 
+    }
+
+    private boolean esEstadoValido(Boolean estado) {
+        return estado != null;
+    }
+
+    private boolean esDatoValido(String dato) {
+        return dato != null && !dato.isEmpty() && !dato.isBlank();
     }
 }
