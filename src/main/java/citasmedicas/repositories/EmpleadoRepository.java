@@ -15,5 +15,7 @@ public interface EmpleadoRepository extends JpaRepository<Empleado, Integer>, Em
 
     Optional<Empleado> findByNumeroDocumento(String numeroDocumento);
 
+    Optional<Empleado> findByNumeroDocumentoAndIdNot(String numeroDocumento, Integer id);
+
     List<Empleado> findAllByEstado(boolean estado, Pageable pageable);
 }

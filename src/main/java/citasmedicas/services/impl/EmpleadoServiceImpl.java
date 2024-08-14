@@ -48,7 +48,6 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         verficiarNumeroDocumentoEmpleadoExiste(numeroDocumento);
 
         Empleado empleado = mapper.empleadoDTOToEmpleado(empleadoDTO);
-        empleado.setId(null);
         repository.save(empleado);
 
         return mapper.empleadoToEmpleadoDTO(empleado);
@@ -81,7 +80,20 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
     @Override
     public EmpleadoDTO actualizar(EmpleadoDTO empleadoDTO) {
-        return null;
+        verificarDatosEmpleadoParaActualizar(empleadoDTO);
+
+        final String numeroDocumento = empleadoDTO.numeroDocumento();
+        final Integer id = empleadoDTO.id();
+
+        Optional<Empleado> numeroDocumentoExistente = repository.findByNumeroDocumentoAndIdNot(numeroDocumento, id);
+        if (numeroDocumentoExistente.isPresent()) {
+            throw new EmpleadoException(EmpleadoException.ERROR_NUMERO_DOCUMENTO_EXISTE);
+        }
+
+        Empleado empleado = mapper.empleadoDTOToEmpleado(empleadoDTO);
+        repository.save(empleado);
+
+        return mapper.empleadoToEmpleadoDTO(empleado);
     }
 
     @Override
@@ -178,6 +190,17 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         if (estado == null) {
             throw new EmpleadoException(EmpleadoException.ERROR_ESTADO_NULL);
         }
+    }
+
+    private void verificarDatosEmpleadoParaActualizar(EmpleadoDTO empleadoDTO) {
+        verificarEmpleadoDTO(empleadoDTO);
+        verificarId(empleadoDTO.id());
+        verificarNombre(empleadoDTO.nombre());
+        verificarApellidoPaterno(empleadoDTO.apellidoPaterno());
+        verificarApellidoMaterno(empleadoDTO.apellidoMaterno());
+        verificarTipoEmpleado(empleadoDTO.tipoEmpleadoDTO());
+        verificarNumeroDocumento(empleadoDTO.numeroDocumento());
+        verificarEstado(empleadoDTO.estado());
     }
 
     private void verificarDatosEmpleadoParaGuardar(EmpleadoDTO empleadoDTO) {

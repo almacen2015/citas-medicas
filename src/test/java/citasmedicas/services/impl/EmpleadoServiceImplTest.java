@@ -75,6 +75,401 @@ public class EmpleadoServiceImplTest {
     }
 
     @Test
+    public void testActualizarEmpleado_DadoEmpleadoValido_RetornaEmpleado() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "11111111",
+                new TipoEmpleadoDTO(1, "Médico"),
+                true);
+
+        Empleado empleado = new Empleado();
+        empleado.setId(1);
+        empleado.setNombre("Victor");
+        empleado.setApellidoPaterno("Orbegozo");
+        empleado.setApellidoMaterno("Percovich");
+        empleado.setNumeroDocumento("11111111");
+        empleado.setTipoEmpleado(new TipoEmpleado(1, "Médico"));
+        empleado.setEstado(true);
+
+        final Integer id = empleadoDTO.id();
+        final String numeroDocumento = empleadoDTO.numeroDocumento();
+
+        when(repository.findByNumeroDocumentoAndIdNot(numeroDocumento, id)).thenReturn(Optional.empty());
+        when(repository.save(empleado)).thenReturn(empleado);
+
+        EmpleadoDTO empleadoActualizado = service.actualizar(empleadoDTO);
+
+        assertThat(empleadoActualizado).isNotNull();
+        assertThat(empleadoActualizado.nombre()).isEqualTo("Victor");
+        assertThat(empleadoActualizado.apellidoPaterno()).isEqualTo("Orbegozo");
+        assertThat(empleadoActualizado.apellidoMaterno()).isEqualTo("Percovich");
+        assertThat(empleadoActualizado.numeroDocumento()).isEqualTo("11111111");
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoNumeroDocumentoExiste_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "12345678",
+                new TipoEmpleadoDTO(1, "Médico"),
+                true);
+
+        final String numeroDocumento = empleadoDTO.numeroDocumento();
+        final Integer id = empleadoDTO.id();
+
+        when(repository.findByNumeroDocumentoAndIdNot(numeroDocumento, id)).thenReturn(Optional.of(empleado));
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoEstadoEsNull_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "70553916",
+                new TipoEmpleadoDTO(1, "Médico"),
+                null);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoIdTipoEmpleadoEsMenor0_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "70553916",
+                new TipoEmpleadoDTO(-1, "Médico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoIdTipoEmpleadoEsIgual0_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "70553916",
+                new TipoEmpleadoDTO(0, "Médico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoIdTipoEmpleadoEsNull_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "70553916",
+                new TipoEmpleadoDTO(null, "Médico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoTipoEmpleadoEsNull_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "70553916",
+                null,
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoNumeroDocumentoMayor8Caracteres_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "123456789",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoNumeroDocumentoTieneEspaciosBlanco_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "   ",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoNumeroDocumentoVacio_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoNumeroDocumentoEsNull_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                null,
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoApellidoMaternoTieneEspaciosBlanco_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "Victor",
+                "Orbegozo",
+                "    ",
+                "70553916",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoApellidoMaternoEsVacio_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "Victor",
+                "Orbegozo",
+                "",
+                "70553916",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoApellidoMaternoEsNull_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "Victor",
+                "Orbegozo",
+                null,
+                "70553916",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoApellidoMaternoMayor255Caracteres_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "Victor",
+                "Orbegozo",
+                "a".repeat(256),
+                "70553916",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoApellidoPaternoMayor255Caracteres_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "Victor",
+                "a".repeat(256),
+                "Percovich",
+                "70553916",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoApellidoPaternoTieneEspaciosBlanco_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "Victor",
+                "Orbegozo",
+                "   ",
+                "70553916",
+                new TipoEmpleadoDTO(1, "Medico"),
+                null);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoApellidoPaternoVacio_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "Victor",
+                "",
+                "Percovich",
+                "70553916",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoApellidoPaternoEsNull_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "Victor",
+                null,
+                "Percovich",
+                "70553916",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoIdEsMenor0_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                -1,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "70553916",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoIdEsIgual0_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                0,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "70553916",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoIdNull_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                null,
+                "Victor",
+                "Orbegozo",
+                "Percovich",
+                "70553916",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoNombreTieneEspaciosBlanco_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "     ",
+                "Orbegozo",
+                "Percovich",
+                "70553916",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoNombreMayor255Caracteres_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "a".repeat(256),
+                "Orbegozo",
+                "Percovich",
+                "70553916",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoNombreVacio_RetornarError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                "",
+                "Orbegozo",
+                "Percovich",
+                "70553916",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoNombreNull_RetornaError() {
+        EmpleadoDTO empleadoDTO = new EmpleadoDTO(
+                1,
+                null,
+                "Orbegozo",
+                "Percovich",
+                "70553916",
+                new TipoEmpleadoDTO(1, "Medico"),
+                true);
+
+        assertThrows(EmpleadoException.class, () -> service.actualizar(empleadoDTO));
+    }
+
+    @Test
+    public void testActualizarEmpleado_DadoEmpleadoNulo_RetornaError() {
+        assertThrows(EmpleadoException.class, () -> service.actualizar(null));
+    }
+
+    @Test
     public void testGuardarEmpleado_DadoEstadoNull_RetornaError() {
         EmpleadoDTO empleadoDTO = new EmpleadoDTO(
                 null,

@@ -58,6 +58,37 @@ public class EmpleadoRepositoryTest {
     }
 
     @Test
+    public void testFindByNumeroDocumentoAndIdNot_DadoNumeroDocumentoEncontradoEIdNoExistente_RetornaEmpleado() {
+        final String numeroDocumento = "70553916";
+        final Integer id = 4;
+
+        Optional<Empleado> empleadoEncontrado = repository.findByNumeroDocumentoAndIdNot(numeroDocumento, id);
+
+        assertThat(empleadoEncontrado).isPresent();
+        assertThat(empleadoEncontrado.get().getNumeroDocumento()).isEqualTo(numeroDocumento);
+    }
+
+    @Test
+    public void testFindByNumeroDocumentoAndIdNot_DadoNumeroDocumentoEncontradoEIdExistente_RetornaEmpleado() {
+        final String numeroDocumento = "70553916";
+        final Integer id = 1;
+
+        Optional<Empleado> empleadoEncontrado = repository.findByNumeroDocumentoAndIdNot(numeroDocumento, id);
+
+        assertThat(empleadoEncontrado).isEmpty();
+    }
+
+    @Test
+    public void testFindByNumeroDocumentoAndIdNot_DadoNumeroDocumentoNoEncontradoEIdExistente_RetornaVacio() {
+        final String numeroDocumento = "11111111";
+        final Integer id = 1;
+
+        Optional<Empleado> empleadoEncontrado = repository.findByNumeroDocumentoAndIdNot(numeroDocumento, id);
+
+        assertThat(empleadoEncontrado).isEmpty();
+    }
+
+    @Test
     public void testFindAll_DadoSinParametros_RetornaEmpleados() {
         List<Empleado> empleados = repository.findAll();
 
