@@ -6,9 +6,8 @@ import citasmedicas.models.entities.Cita;
 import citasmedicas.models.enums.Estado;
 import citasmedicas.models.mappers.CitaMapper;
 import citasmedicas.repositories.CitaRepository;
-import citasmedicas.services.AreaService;
 import citasmedicas.services.CitaService;
-import citasmedicas.services.ClienteService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,14 +15,17 @@ import java.util.List;
 @Service
 public class CitaServiceImpl implements CitaService {
     private final CitaRepository repository;
-    private final AreaService areaService;
-    private final ClienteService clienteService;
     private final CitaMapper citaMapper = CitaMapper.INSTANCE;
 
-    public CitaServiceImpl(CitaRepository repository, AreaService areaService, ClienteService clienteService) {
+    public CitaServiceImpl(CitaRepository repository) {
         this.repository = repository;
-        this.areaService = areaService;
-        this.clienteService = clienteService;
+    }
+
+    @Override
+    public List<CitaDTO> listarCitasPorCliente(Integer clienteId) {
+        esClienteIdValido(clienteId);
+        List<Cita> citasEncontradas = repository.findCitasByClienteId(clienteId);
+        return citaMapper.citasToCitasDTO(citasEncontradas);
     }
 
     @Override
@@ -33,6 +35,7 @@ public class CitaServiceImpl implements CitaService {
     }
 
     @Override
+    @Transactional(rollbackOn = CitaException.class)
     public CitaDTO guardar(CitaDTO citaDTO) {
         Cita cita = citaMapper.citaDTOToCita(citaDTO);
         validarDatos(cita);
@@ -40,8 +43,14 @@ public class CitaServiceImpl implements CitaService {
         return citaMapper.citaToCitaDTO(newCita);
     }
 
+    private void esClienteIdValido(Integer clienteId) {
+        if (clienteId == null || clienteId <= 0) {
+            throw new CitaException(CitaException.CLIENTE_NO_VALIDO);
+        }
+    }
+
     private void validarDatos(Cita cita) {
-        if (cita.getTitulo().equals("")) {
+        if (cita.getTitulo().isEmpty()) {
             throw new CitaException(CitaException.TITULO_NO_VALIDO);
         }
         if (cita.getArea() == null) {

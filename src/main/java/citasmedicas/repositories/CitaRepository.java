@@ -11,6 +11,8 @@ import java.util.List;
 @Repository
 public interface CitaRepository extends JpaRepository<Cita, Integer> {
 
+    List<Cita> findCitasByClienteId(Integer clienteId);
+
     @Query(value = "select c from Cita c where c.cliente.id =:clienteId and c.area.id =:areaId and DATE(c.fechaInicio) =:fechaInicio")
     List<Cita> findByClienteIdAndAreaIdAndFechaInicio(Integer clienteId, Integer areaId, Date fechaInicio);
 

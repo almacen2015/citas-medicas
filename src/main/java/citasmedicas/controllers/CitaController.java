@@ -9,13 +9,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 
 @RestController
 @RequestMapping("/api/cita")
-@CrossOrigin(origins = "http://localhost:4200")
 public class CitaController {
 
     private final CitaService service;
@@ -30,19 +30,33 @@ public class CitaController {
                     schema = @Schema(type = "array", implementation = CitaDTO.class))
             )
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping
     public ResponseEntity<?> listar() {
         return new ResponseEntity<>(service.listar(), HttpStatus.OK);
     }
 
-    @Operation(summary = "Guarda una cita",description = "Guarda la cita")
+    @Operation(summary = "Guarda una cita", description = "Guarda la cita")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", content = @Content(
                     schema = @Schema(type = "array", implementation = CitaDTO.class)
             ))
     })
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<?> guardar(@RequestBody CitaDTO citaDTO) throws ParseException {
         return new ResponseEntity<>(service.guardar(citaDTO), HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Listar citas por cliente ID", description = "Listar citas por cliente ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", content = @Content(
+                    schema = @Schema(type = "array", implementation = CitaDTO.class)
+            ))
+    })
+    @GetMapping("/listar-por-cliente")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<?> listarPorClienteId(@RequestParam Integer clienteId) {
+        return new ResponseEntity<>(service.listarCitasPorCliente(clienteId), HttpStatus.OK);
     }
 }

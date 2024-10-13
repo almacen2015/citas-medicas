@@ -2,13 +2,13 @@ package citasmedicas.services;
 
 
 import citasmedicas.models.dto.CitaDTO;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional(rollbackFor = Exception.class)
 public interface CitaService {
     List<CitaDTO> listar();
 
     CitaDTO guardar(CitaDTO citaDTO);
+
+    List<CitaDTO> listarCitasPorCliente(Integer clienteId);
 }
