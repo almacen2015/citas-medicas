@@ -10,5 +10,5 @@ public interface CitaService {
 
     CitaDTO guardar(CitaDTO citaDTO);
 
-    List<CitaDTO> listarCitasPorCliente(Integer clienteId);
+    List<CitaDTO> listarCitasPorCliente(Integer clienteId, String estado);
 }

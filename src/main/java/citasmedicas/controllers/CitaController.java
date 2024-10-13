@@ -56,7 +56,7 @@ public class CitaController {
     })
     @GetMapping("/listar-por-cliente")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public ResponseEntity<?> listarPorClienteId(@RequestParam Integer clienteId) {
-        return new ResponseEntity<>(service.listarCitasPorCliente(clienteId), HttpStatus.OK);
+    public ResponseEntity<?> listarPorClienteId(@RequestParam Integer clienteId, @RequestParam String estado) {
+        return new ResponseEntity<>(service.listarCitasPorCliente(clienteId, estado), HttpStatus.OK);
     }
 }

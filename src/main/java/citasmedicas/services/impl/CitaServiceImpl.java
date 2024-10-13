@@ -22,9 +22,15 @@ public class CitaServiceImpl implements CitaService {
     }
 
     @Override
-    public List<CitaDTO> listarCitasPorCliente(Integer clienteId) {
+    public List<CitaDTO> listarCitasPorCliente(Integer clienteId, String estado) {
         esClienteIdValido(clienteId);
-        List<Cita> citasEncontradas = repository.findCitasByClienteId(clienteId);
+        List<Cita> citasEncontradas = null;
+        if (!estado.isEmpty()) {
+            citasEncontradas = repository.findCitasByClienteIdAndEstado(clienteId, estado);
+        } else {
+
+            citasEncontradas = repository.findCitasByClienteId(clienteId);
+        }
         return citaMapper.citasToCitasDTO(citasEncontradas);
     }
 
