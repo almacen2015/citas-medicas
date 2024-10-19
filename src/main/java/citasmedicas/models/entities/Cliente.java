@@ -2,7 +2,7 @@ package citasmedicas.models.entities;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -24,13 +24,28 @@ public class Cliente {
     private String numeroDocumento;
 
     @Column(name = "fecha_nacimiento")
-    private Date fechaNacimiento;
+    private LocalDate fechaNacimiento;
 
     private String sexo;
 
     private String telefono;
 
     private String email;
+
+    public Cliente() {
+    }
+
+    public Cliente(Integer id, String nombre, String apellidoPaterno, String apellidoMaterno, String numeroDocumento, LocalDate fechaNacimiento, String sexo, String telefono, String email) {
+        this.id = id;
+        this.nombre = nombre;
+        this.apellidoPaterno = apellidoPaterno;
+        this.apellidoMaterno = apellidoMaterno;
+        this.numeroDocumento = numeroDocumento;
+        this.fechaNacimiento = fechaNacimiento;
+        this.sexo = sexo;
+        this.telefono = telefono;
+        this.email = email;
+    }
 
     public Integer getId() {
         return id;
@@ -72,11 +87,11 @@ public class Cliente {
         this.numeroDocumento = numeroDocumento;
     }
 
-    public Date getFechaNacimiento() {
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(Date fechaNacimiento) {
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 

@@ -10,6 +10,9 @@ import citasmedicas.services.CitaService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Service
@@ -43,6 +46,8 @@ public class CitaServiceImpl implements CitaService {
     @Override
     @Transactional(rollbackOn = CitaException.class)
     public CitaDTO guardar(CitaDTO citaDTO) {
+        convertAndValidateDate(citaDTO.fechaInicio());
+        convertAndValidateDate(citaDTO.fechaFin());
         Cita cita = citaMapper.citaDTOToCita(citaDTO);
         validarDatos(cita);
         Cita newCita = repository.save(cita);
@@ -90,5 +95,17 @@ public class CitaServiceImpl implements CitaService {
         String estado = String.valueOf(Estado.Activo);
         List<Cita> citas = repository.findCitaBetweenFechaInicioAndFechaFin(cita.getFechaInicio(), estado);
         return !citas.isEmpty();
+    }
+
+    public LocalDateTime convertAndValidateDate(String dateStr) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        try {
+            // Intentar parsear la fecha
+            return LocalDateTime.parse(dateStr, formatter);
+        } catch (DateTimeParseException e) {
+            // Si la fecha no es válida, lanzar una excepción o manejar el error
+            System.out.println("Fecha no válida: " + dateStr);
+            return null;
+        }
     }
 }

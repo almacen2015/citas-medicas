@@ -6,8 +6,10 @@ import citasmedicas.models.entities.Cliente;
 import citasmedicas.models.mappers.ClienteMapper;
 import citasmedicas.repositories.ClienteRepository;
 import citasmedicas.services.ClienteService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,10 +29,12 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Cliente guardar(ClienteDTO clienteDTO) {
+    @Transactional(rollbackOn = ClienteException.class)
+    public ClienteDTO guardar(ClienteDTO clienteDTO) {
         validarDatos(clienteDTO);
         Cliente cliente = clienteMapper.clienteDTOToCliente(clienteDTO);
-        return repository.save(cliente);
+        Cliente clienteGuardado = repository.save(cliente);
+        return clienteMapper.clienteToClienteDTO(clienteGuardado);
     }
 
     @Override
@@ -43,6 +47,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    @Transactional(rollbackOn = ClienteException.class)
     public ClienteDTO actualizar(ClienteDTO clienteDTO, Integer id) {
         Optional<ClienteDTO> clienteConsultado = obtenerClientePorId(id);
         if (clienteConsultado.isPresent()) {
@@ -55,6 +60,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    @Transactional(rollbackOn = ClienteException.class)
     public void eliminar(Integer id) {
         repository.deleteById(id);
     }
@@ -69,28 +75,76 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     private void validarDatos(ClienteDTO clienteDTO) {
-        if (clienteDTO.nombre().equals("")) {
-            throw new ClienteException(ClienteException.NOMBRE_NO_VALIDO);
-        }
+        String nombre = clienteDTO.nombre();
+        String apellidoPaterno = clienteDTO.apellidoPaterno();
+        String apellidoMaterno = clienteDTO.apellidoMaterno();
+        String numeroDocumento = clienteDTO.numeroDocumento();
+        String sexo = clienteDTO.sexo();
 
-        if (clienteDTO.apellidoMaterno().equals("")) {
-            throw new ClienteException(ClienteException.APELLIDO_MATERNO_NO_VALIDO);
-        }
+        validarNombre(nombre);
+        validarApellidoMaterno(apellidoMaterno);
+        validarApellidoPaterno(apellidoPaterno);
+        validarNumeroDocumento(numeroDocumento);
+        validarSexo(sexo);
+        validarFechaNacimiento(clienteDTO);
+    }
 
-        if (clienteDTO.apellidoPaterno().equals("")) {
-            throw new ClienteException(ClienteException.APELLIDO_PATERNO_NO_VALIDO);
-        }
-
-        if (clienteDTO.numeroDocumento().equals("")) {
-            throw new ClienteException(ClienteException.NUMERO_DOCUMENTO_NO_VALIDO);
-        }
-
-        if (clienteDTO.sexo().equals("")) {
-            throw new ClienteException(ClienteException.SEXO_NO_VALIDO);
-        }
-
+    private void validarFechaNacimiento(ClienteDTO clienteDTO) {
         if (clienteDTO.fechaNacimiento() == null) {
             throw new ClienteException(ClienteException.FECHA_NACIMIENTO_NO_VALIDO);
         }
+
+        LocalDate fechaNacimiento = LocalDate.parse(clienteDTO.fechaNacimiento());
+        if (esFechaNacimientoHoy(fechaNacimiento) || esFechaNacimientoDespuesHoy(fechaNacimiento)) {
+            throw new ClienteException(ClienteException.FECHA_NACIMIENTO_NO_VALIDO);
+        }
+    }
+
+    private static void validarSexo(String sexo) {
+        if (sexo == null || sexo.isEmpty() || sexo.isBlank()) {
+            throw new ClienteException(ClienteException.SEXO_NO_VALIDO);
+        }
+
+        if (!sexo.equals("F") && !sexo.equals("M")) {
+            throw new ClienteException(ClienteException.SEXO_NO_VALIDO);
+        }
+    }
+
+    private void validarNumeroDocumento(String numeroDocumento) {
+        if (numeroDocumento == null || numeroDocumento.isBlank() || numeroDocumento.length() != 8 || !soloNumeros(numeroDocumento)) {
+            throw new ClienteException(ClienteException.NUMERO_DOCUMENTO_NO_VALIDO);
+        }
+    }
+
+    private static void validarApellidoPaterno(String apellidoPaterno) {
+        if (apellidoPaterno == null || apellidoPaterno.isBlank() || apellidoPaterno.isEmpty() || apellidoPaterno.length() > 255) {
+            throw new ClienteException(ClienteException.APELLIDO_PATERNO_NO_VALIDO);
+        }
+    }
+
+    private static void validarApellidoMaterno(String apellidoMaterno) {
+        if (apellidoMaterno == null || apellidoMaterno.isBlank() || apellidoMaterno.isEmpty() || apellidoMaterno.length() > 255) {
+            throw new ClienteException(ClienteException.APELLIDO_MATERNO_NO_VALIDO);
+        }
+    }
+
+    private void validarNombre(String nombre) {
+        if (nombre == null || nombre.isBlank() || nombre.isEmpty() || nombre.length() > 255) {
+            throw new ClienteException(ClienteException.NOMBRE_NO_VALIDO);
+        }
+    }
+
+    private boolean soloNumeros(String str) {
+        return str != null && str.matches("\\d+");
+    }
+
+    private boolean esFechaNacimientoHoy(LocalDate fecha) {
+        LocalDate fechaHoy = LocalDate.now();
+        return fecha.isEqual(fechaHoy);
+    }
+
+    private boolean esFechaNacimientoDespuesHoy(LocalDate fecha) {
+        LocalDate fechaHoy = LocalDate.now();
+        return fecha.isAfter(fechaHoy);
     }
 }

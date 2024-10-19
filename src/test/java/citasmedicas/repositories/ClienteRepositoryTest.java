@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class ClienteRepositoryTest {
         cliente.setApellidoPaterno("Perez");
         cliente.setApellidoMaterno("Gomez");
         cliente.setNumeroDocumento("12345678");
-        cliente.setFechaNacimiento(new Date(1990, 1, 1));
+        cliente.setFechaNacimiento(LocalDate.of(1999, 10, 10));
         cliente.setSexo("M");
         cliente.setTelefono("123456789");
         cliente.setEmail("vorbegozop@gmail.com");
@@ -41,7 +42,7 @@ public class ClienteRepositoryTest {
         assertThat(clienteGuardado.getApellidoPaterno()).isEqualTo("Perez");
         assertThat(clienteGuardado.getApellidoMaterno()).isEqualTo("Gomez");
         assertThat(clienteGuardado.getNumeroDocumento()).isEqualTo("12345678");
-        assertThat(clienteGuardado.getFechaNacimiento()).isEqualTo(new Date(1990, 1, 1));
+        assertThat(clienteGuardado.getFechaNacimiento()).isEqualTo(LocalDate.of(1999, 10, 10));
         assertThat(clienteGuardado.getSexo()).isEqualTo("M");
         assertThat(clienteGuardado.getTelefono()).isEqualTo("123456789");
         assertThat(clienteGuardado.getEmail()).isEqualTo("vorbegozop@gmail.com");
@@ -55,7 +56,7 @@ public class ClienteRepositoryTest {
         cliente.setApellidoPaterno("Perez");
         cliente.setApellidoMaterno("Gomez");
         cliente.setNumeroDocumento("12345678");
-        cliente.setFechaNacimiento(new Date(1990, 1, 1));
+        cliente.setFechaNacimiento(LocalDate.of(1999, 10, 10));
         cliente.setSexo("M");
         cliente.setTelefono("123456789");
         cliente.setEmail("vorbegozop@gmail.com");
@@ -70,7 +71,7 @@ public class ClienteRepositoryTest {
         cliente.setApellidoPaterno("Torres");
         cliente.setApellidoMaterno("Sanchez");
         cliente.setNumeroDocumento("87654321");
-        cliente.setFechaNacimiento(new Date(1995, 1, 1));
+        cliente.setFechaNacimiento(LocalDate.of(1999, 10, 10));
         cliente.setSexo("F");
         cliente.setTelefono("987654321");
         cliente.setEmail("maria@gmail.com");
@@ -98,7 +99,7 @@ public class ClienteRepositoryTest {
         cliente1.setApellidoPaterno("Perez");
         cliente1.setApellidoMaterno("Gomez");
         cliente1.setNumeroDocumento("12345678");
-        cliente1.setFechaNacimiento(new Date(1990, 1, 1));
+        cliente1.setFechaNacimiento(LocalDate.of(1999, 10, 10));
         cliente1.setSexo("M");
         cliente1.setTelefono("123456789");
         cliente1.setEmail("juan@gmail.com");
@@ -109,7 +110,7 @@ public class ClienteRepositoryTest {
         cliente2.setApellidoPaterno("Torres");
         cliente2.setApellidoMaterno("Sanchez");
         cliente2.setNumeroDocumento("87654321");
-        cliente2.setFechaNacimiento(new Date(1995, 1, 1));
+        cliente2.setFechaNacimiento(LocalDate.of(1999, 10, 10));
         cliente2.setSexo("F");
         cliente2.setTelefono("987654321");
         cliente2.setEmail("maria@gmail.com");

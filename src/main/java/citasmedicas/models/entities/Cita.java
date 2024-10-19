@@ -2,7 +2,7 @@ package citasmedicas.models.entities;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -18,8 +18,8 @@ public class Cita {
     @JoinColumn(referencedColumnName = "id")
     private Area area;
     private String titulo;
-    private Date fechaInicio;
-    private Date fechaFin;
+    private LocalDateTime fechaInicio;
+    private LocalDateTime fechaFin;
     private String estado;
 
     public Integer getId() {
@@ -46,19 +46,19 @@ public class Cita {
         this.titulo = titulo;
     }
 
-    public Date getFechaInicio() {
+    public LocalDateTime getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(Date fechaInicio) {
+    public void setFechaInicio(LocalDateTime fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public Date getFechaFin() {
+    public LocalDateTime getFechaFin() {
         return fechaFin;
     }
 
-    public void setFechaFin(Date fechaFin) {
+    public void setFechaFin(LocalDateTime fechaFin) {
         this.fechaFin = fechaFin;
     }
 
