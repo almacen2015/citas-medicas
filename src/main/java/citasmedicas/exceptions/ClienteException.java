@@ -9,6 +9,7 @@ public class ClienteException extends RuntimeException {
     public static String CLIENTE_NO_ENCONTRADO = "CLIENTE_NO_ENCONTRADO";
     public static String SEXO_NO_VALIDO = "SEXO_NO_VALIDO";
     public static String FECHA_NACIMIENTO_NO_VALIDO = "FECHA_NACIMIENTO_NO_VALIDO";
+    public static String ID_NO_VALIDO = "ID_NO_VALIDO";
 
     public ClienteException(String message) {
         super(message);

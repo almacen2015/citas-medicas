@@ -39,6 +39,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Optional<ClienteDTO> obtenerClientePorId(Integer id) {
+        validarIdCliente(id);
         Optional<Cliente> clienteConsultado = repository.findById(id);
         if (clienteConsultado.isPresent()) {
             return Optional.ofNullable(clienteMapper.clienteToClienteDTO(clienteConsultado.get()));
@@ -49,9 +50,10 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     @Transactional(rollbackOn = ClienteException.class)
     public ClienteDTO actualizar(ClienteDTO clienteDTO, Integer id) {
-        Optional<ClienteDTO> clienteConsultado = obtenerClientePorId(id);
+        validarIdCliente(id);
+        validarDatos(clienteDTO);
+        Optional<Cliente> clienteConsultado = repository.findById(id);
         if (clienteConsultado.isPresent()) {
-            validarDatos(clienteDTO);
             Cliente clienteActualizar = asignarDatos(clienteDTO, clienteConsultado);
             Cliente updatedCliente = repository.save(clienteActualizar);
             return clienteMapper.clienteToClienteDTO(updatedCliente);
@@ -62,14 +64,15 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     @Transactional(rollbackOn = ClienteException.class)
     public void eliminar(Integer id) {
+        validarIdCliente(id);
         repository.deleteById(id);
     }
 
-    private Cliente asignarDatos(ClienteDTO clienteDTO, Optional<ClienteDTO> clienteConsultado) {
+    private Cliente asignarDatos(ClienteDTO clienteDTO, Optional<Cliente> clienteConsultado) {
         Cliente clienteActualizar = new Cliente();
         clienteActualizar = clienteMapper.clienteDTOToCliente(clienteDTO);
         if (clienteConsultado.isPresent()) {
-            clienteActualizar.setId(clienteConsultado.get().id());
+            clienteActualizar.setId(clienteConsultado.get().getId());
         }
         return clienteActualizar;
     }
@@ -87,6 +90,12 @@ public class ClienteServiceImpl implements ClienteService {
         validarNumeroDocumento(numeroDocumento);
         validarSexo(sexo);
         validarFechaNacimiento(clienteDTO);
+    }
+
+    private static void validarIdCliente(Integer id) {
+        if (id == null || id <= 0) {
+            throw new ClienteException(ClienteException.ID_NO_VALIDO);
+        }
     }
 
     private void validarFechaNacimiento(ClienteDTO clienteDTO) {

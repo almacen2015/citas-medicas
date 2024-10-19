@@ -45,6 +45,221 @@ public class ClienteServiceImplTest {
     }
 
     @Test
+    public void testActualizar_DadoSexoEsDiferenteMasculinoYFemenino_RetornaError() {
+        ClienteDTO clienteDTO = new ClienteDTO(1, "Victor", "Orbegozo", "Percovich", "70553916", "2024-10-10", "A", "11111111", "vorbegozop@gmail.com");
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoSexoTieneEspacioBlanco_RetornaError() {
+        ClienteDTO clienteDTO = new ClienteDTO(1, "Victor", "Orbegozo", "Percovich", "70553916", "2024-10-10", " ", "11111111", "vorbegozop@gmail.com");
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoSexoEsVacio_RetornaError() {
+        ClienteDTO clienteDTO = new ClienteDTO(1, "Victor", "Orbegozo", "Percovich", "70553916", "2024-10-10", "", "11111111", "vorbegozop@gmail.com");
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoSexoEsNull_RetornaError() {
+        ClienteDTO clienteDTO = new ClienteDTO(1, "Victor", "Orbegozo", "Percovich", "70553916", "2024-10-10", null, "11111111", "vorbegozop@gmail.com");
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoFechaNacimientoEsInvalido_RetornaError() {
+        ClienteDTO clienteDTO = new ClienteDTO(1, "Victor", "Orbegozo", "Percovich", "70553916", "2024-20-10", "M", "11111111", "vorbegozop@gmail.com");
+        assertThrows(DateTimeParseException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoFechaNacimientoEsDespuesHoy_RetornaError() {
+        cliente1.setFechaNacimiento(LocalDate.of(2050, 10, 20));
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoFechaNacimientoEsHoy_RetornaError() {
+        cliente1.setFechaNacimiento(LocalDate.now());
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoFechaNacimientoEsNull_RetornaError() {
+        cliente1.setFechaNacimiento(null);
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoNumeroDocumentoTieneMenos8Caracteres_RetornaError() {
+        cliente1.setNumeroDocumento("123456");
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoNumeroDocumentoTieneCaracterEspecial_RetornaError() {
+        cliente1.setNumeroDocumento("123*3456");
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoNumeroDocumentoTieneUnaLetra_RetornaError() {
+        cliente1.setNumeroDocumento("123d3456");
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoNumeroDocumentoMayor8Caracteres_RetornaError() {
+        cliente1.setNumeroDocumento("1".repeat(9));
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoNumeroDocumentoTieneEspaciosBlanco_RetornaError() {
+        cliente1.setNumeroDocumento("    ");
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoNumeroDocumentoEsVacio_RetornaError() {
+        cliente1.setNumeroDocumento("");
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoNumeroDocumentoEsNull_RetornaError() {
+        cliente1.setNumeroDocumento(null);
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoApellidoMaternoSoloTieneEspaciosBlanco_RetornaError() {
+        cliente1.setApellidoMaterno("                                                       ");
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoApellidoMaternoEsNull_RetornaError() {
+        cliente1.setApellidoMaterno(null);
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoApellidoMaternoVacio_RetornaError() {
+        cliente1.setApellidoMaterno("");
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoApellidoMaternoMayor255Caracteres_RetornaError() {
+        cliente1.setApellidoMaterno("a".repeat(256));
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoApellidoPaternoSoloTieneEspaciosBlanco_RetornaError() {
+        cliente1.setApellidoPaterno("                                                       ");
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoApellidoPaternoEsNull_RetornaError() {
+        cliente1.setApellidoPaterno(null);
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoApellidoPaternoVacio_RetornaError() {
+        cliente1.setApellidoPaterno("");
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoApellidoPaternoMayor255Caracteres_RetornaError() {
+        cliente1.setApellidoPaterno("a".repeat(256));
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoNombreSoloTieneEspaciosBlanco_RetornaError() {
+        cliente1.setNombre("                                                       ");
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoNombreEsNull_RetornaError() {
+        cliente1.setNombre(null);
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoNombreMayor255Caracteres_RetornaError() {
+        cliente1.setNombre("a".repeat(256));
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoNombreVacio_RetornaError() {
+        cliente1.setNombre("");
+        ClienteDTO clienteDTO = mapper.clienteToClienteDTO(cliente1);
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, 1));
+    }
+
+    @Test
+    public void testActualizar_DadoIdMenorZero_RetornaError() {
+        int id = -1;
+        ClienteDTO clienteDTO = new ClienteDTO(2, "Fernando", "Torres", "Pacheco", "98765434", "2024-10-10", "M", "222222", "julia@gmail.com");
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, id));
+    }
+
+    @Test
+    public void testActualizar_DadoIdZero_RetornaError() {
+        int id = 0;
+        ClienteDTO clienteDTO = new ClienteDTO(2, "Fernando", "Torres", "Pacheco", "98765434", "2024-10-10", "M", "222222", "julia@gmail.com");
+        assertThrows(ClienteException.class, () -> service.actualizar(clienteDTO, id));
+    }
+
+    @Test
+    public void testActualizar_DadoDatosValidos_RetornaCliente() {
+        when(repository.findById(any(Integer.class))).thenReturn(Optional.of(cliente1));
+        when(repository.save(any(Cliente.class))).thenReturn(cliente2);
+
+        ClienteDTO clienteDTO = new ClienteDTO(2, "Fernando", "Torres", "Pacheco", "98765434", "2024-10-10", "M", "222222", "julia@gmail.com");
+
+        ClienteDTO clienteActualizado = service.actualizar(clienteDTO, 2);
+
+        assertThat(clienteActualizado).isNotNull();
+        assertThat(clienteActualizado.id()).isEqualTo(2);
+        assertThat(clienteActualizado.nombre()).isEqualTo("Fernando");
+
+        verify(repository).findById(any(Integer.class));
+        verify(repository).save(any(Cliente.class));
+    }
+
+    @Test
     public void testGuardar_DadoSexoEsDiferenteMasculinoYFemenino_RetornaError() {
         ClienteDTO clienteDTO = new ClienteDTO(1, "Victor", "Orbegozo", "Percovich", "70553916", "2024-10-10", "A", "11111111", "vorbegozop@gmail.com");
         assertThrows(ClienteException.class, () -> service.guardar(clienteDTO));
