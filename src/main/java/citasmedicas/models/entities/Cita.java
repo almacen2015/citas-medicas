@@ -22,6 +22,19 @@ public class Cita {
     private LocalDateTime fechaFin;
     private String estado;
 
+    public Cita() {
+    }
+
+    public Cita(Integer id, Cliente cliente, Area area, String titulo, LocalDateTime fechaInicio, LocalDateTime fechaFin, String estado) {
+        this.id = id;
+        this.cliente = cliente;
+        this.area = area;
+        this.titulo = titulo;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.estado = estado;
+    }
+
     public Integer getId() {
         return id;
     }
