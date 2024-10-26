@@ -11,12 +11,15 @@ public class Cita {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @OneToOne
-    @JoinColumn(referencedColumnName = "id")
+
+    @ManyToOne
+    @JoinColumn(name = "cliente_id", referencedColumnName = "id")
     private Cliente cliente;
-    @OneToOne
-    @JoinColumn(referencedColumnName = "id")
+
+    @ManyToOne
+    @JoinColumn(name = "area_id", referencedColumnName = "id")
     private Area area;
+
     private String titulo;
     private LocalDateTime fechaInicio;
     private LocalDateTime fechaFin;
