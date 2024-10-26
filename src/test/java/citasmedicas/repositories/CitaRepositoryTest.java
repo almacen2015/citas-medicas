@@ -44,7 +44,6 @@ public class CitaRepositoryTest {
 
     @Test
     public void testFindCitasByClienteIdAndEstado_DadoClienteValidoYEstadoInactivo_RetornaCitas() {
-
         List<Cita> citas = repository.findCitasByClienteIdAndEstado(2, "I");
 
         assertThat(citas).isNotEmpty();
@@ -72,5 +71,21 @@ public class CitaRepositoryTest {
         Cita citaCreada = repository.save(citaNueva);
 
         assertThat(citaCreada).isNotNull();
+    }
+
+    @Test
+    public void testFindByClienteIdAndAreaIdAndFechaInicio_DadoParametrosValidos_RetornaCita() {
+        List<Cita> citas = repository.findByClienteIdAndAreaIdAndFechaInicio(1, 1, LocalDateTime.of(2024, 11, 1, 9, 0));
+
+        assertThat(citas).isNotEmpty();
+    }
+
+    @Test
+    public void testFindCitaBetweenFechaInicioAndEstado_DadoParametrosValidos_RetornaCita() {
+        LocalDateTime fechaInicio = LocalDateTime.of(2024, 11, 1, 9, 0, 0);
+        LocalDateTime fechaFin = LocalDateTime.of(2024, 11, 1, 10, 0, 0);
+        List<Cita> citas = repository.findByFechaInicioBetween(fechaInicio, fechaFin);
+
+        assertThat(citas).isNotEmpty();
     }
 }

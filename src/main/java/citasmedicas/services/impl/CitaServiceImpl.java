@@ -3,7 +3,6 @@ package citasmedicas.services.impl;
 import citasmedicas.exceptions.CitaException;
 import citasmedicas.models.dto.CitaDTO;
 import citasmedicas.models.entities.Cita;
-import citasmedicas.models.enums.Estado;
 import citasmedicas.models.mappers.CitaMapper;
 import citasmedicas.repositories.CitaRepository;
 import citasmedicas.services.CitaService;
@@ -92,8 +91,9 @@ public class CitaServiceImpl implements CitaService {
     }
 
     private boolean existeCitaEntreRangoDeFechaYHora(Cita cita) {
-        String estado = String.valueOf(Estado.Activo);
-        List<Cita> citas = repository.findCitaBetweenFechaInicioAndFechaFin(cita.getFechaInicio(), estado);
+        final LocalDateTime fechaInicio = cita.getFechaInicio();
+        final LocalDateTime fechaFin = cita.getFechaFin();
+        List<Cita> citas = repository.findByFechaInicioBetween(fechaInicio, fechaFin);
         return !citas.isEmpty();
     }
 
