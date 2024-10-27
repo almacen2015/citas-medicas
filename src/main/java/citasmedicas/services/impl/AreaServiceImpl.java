@@ -30,24 +30,30 @@ public class AreaServiceImpl implements AreaService {
     @Override
     @Transactional(rollbackOn = AreaException.class)
     public AreaDTO guardar(AreaDTO areaDTO) {
-        validarDatos(areaDTO);
+        validarDatosGuardar(areaDTO);
         Area area = areaMapper.areaDTOToArea(areaDTO);
         Area areaGuardada = repository.save(area);
         return areaMapper.areaToAreaDTO(areaGuardada);
     }
 
-    private void validarDatos(AreaDTO areaDTO) {
+    private void validarDatosGuardar(AreaDTO area) {
+        validarNombre(area.nombre());
+    }
+
+    private void validarNombre(String nombre) {
         final int MAX_LENGHT_NOMBRE = 255;
 
-        if (areaDTO.nombre().length() > MAX_LENGHT_NOMBRE) {
+        if (nombre == null || nombre.isEmpty() || nombre.isBlank()
+                || nombre.length() > MAX_LENGHT_NOMBRE) {
             throw new AreaException(AreaException.NOMBRE_NO_VALIDO);
         }
+    }
 
-        if (areaDTO.nombre().isEmpty()) {
-            throw new AreaException(AreaException.NOMBRE_NO_VALIDO);
-        }
-
-        if (repository.findByNombre(areaDTO.nombre()).isPresent()) {
+    private void validarDatosActualizar(AreaDTO areaDTO) {
+        validarId(areaDTO.id());
+        validarNombre(areaDTO.nombre());
+        Optional<Area> areaEncontrada = repository.findByNombre(areaDTO.nombre());
+        if (areaEncontrada.isPresent()) {
             throw new AreaException(AreaException.NOMBRE_EXISTE);
         }
     }
@@ -63,7 +69,7 @@ public class AreaServiceImpl implements AreaService {
     public AreaDTO actualizar(AreaDTO areaDTO, Integer id) {
         Optional<Area> areaEncontrado = repository.findById(id);
         if (areaEncontrado.isPresent()) {
-            validarDatos(areaDTO);
+            validarDatosActualizar(areaDTO);
             Area area = asignarDatosActualizar(areaDTO, areaEncontrado);
             Area areaActualizada = repository.save(area);
             return areaMapper.areaToAreaDTO(areaActualizada);

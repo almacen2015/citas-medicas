@@ -1,5 +1,6 @@
 package citasmedicas.services.impl;
 
+import citasmedicas.exceptions.AreaException;
 import citasmedicas.exceptions.CitaException;
 import citasmedicas.models.dto.AreaDTO;
 import citasmedicas.models.dto.CitaDTO;
@@ -10,6 +11,8 @@ import citasmedicas.models.entities.Cliente;
 import citasmedicas.models.mappers.AreaMapper;
 import citasmedicas.models.mappers.ClienteMapper;
 import citasmedicas.repositories.CitaRepository;
+import citasmedicas.services.AreaService;
+import citasmedicas.services.ClienteService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -26,6 +30,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,6 +38,12 @@ public class CitaServiceImplTest {
 
     @Mock
     private CitaRepository repository;
+
+    @Mock
+    private ClienteService clienteService;
+
+    @Mock
+    private AreaService areaService;
 
     @InjectMocks
     private CitaServiceImpl service;
@@ -47,6 +58,7 @@ public class CitaServiceImplTest {
     Area area2;
 
     private AreaMapper areaMapper = AreaMapper.INSTANCE;
+
     private ClienteMapper clienteMapper = ClienteMapper.INSTANCE;
 
     @BeforeEach
@@ -99,6 +111,77 @@ public class CitaServiceImplTest {
         repository.save(cita2);
     }
 
+    //TODO REVISAR SI LAS VALIDACIONES POR EJEM ID O DATOS SEAN PUBLICOS O PRIVADOS
+
+    @Test
+    public void testGuardarCita_DadoAreaNoValida_RetornaError() {
+        area1.setId(null);
+        AreaDTO areaDTO = areaMapper.areaToAreaDTO(area1);
+        ClienteDTO clienteDTO = clienteMapper.clienteToClienteDTO(cliente1);
+
+        when(areaService.obtenerPorId(null)).thenThrow(AreaException.class);
+
+        CitaDTO citaDTO = new CitaDTO(1, clienteDTO, areaDTO, "Hola", "2024-10-12 12:00:00", "2024-10-12 13:00:00", "A");
+
+        assertThrows(AreaException.class, () -> service.guardar(citaDTO));
+
+        verify(areaService).obtenerPorId(null);
+    }
+
+    @Test
+    public void testGuardarCita_DadoFechaFinNoValido_RetornaError() {
+        AreaDTO areaDTO = areaMapper.areaToAreaDTO(area1);
+        ClienteDTO clienteDTO = clienteMapper.clienteToClienteDTO(cliente1);
+        CitaDTO citaDTO = new CitaDTO(1, clienteDTO, areaDTO, "Hola", "2024-10-12 12:00:00", "2024-40-12 13:00:00", "A");
+
+        assertThrows(DateTimeParseException.class, () -> service.guardar(citaDTO));
+    }
+
+    @Test
+    public void testGuardarCita_DadoFechaInicioNoValido_RetornaError() {
+        AreaDTO areaDTO = areaMapper.areaToAreaDTO(area1);
+        ClienteDTO clienteDTO = clienteMapper.clienteToClienteDTO(cliente1);
+        CitaDTO citaDTO = new CitaDTO(1, clienteDTO, areaDTO, "Hola", "2024-20-40 12:00:00", "2024-10-12 13:00:00", "A");
+
+        assertThrows(DateTimeParseException.class, () -> service.guardar(citaDTO));
+    }
+
+    @Test
+    public void testGuardarCita_DadoTituloEsMayor255Caracteres_RetornaError() {
+        AreaDTO areaDTO = areaMapper.areaToAreaDTO(area1);
+        ClienteDTO clienteDTO = clienteMapper.clienteToClienteDTO(cliente1);
+        CitaDTO citaDTO = new CitaDTO(1, clienteDTO, areaDTO, "a".repeat(256), "2024-10-12 12:00:00", "2024-10-12 13:00:00", "A");
+
+        assertThrows(CitaException.class, () -> service.guardar(citaDTO));
+    }
+
+    @Test
+    public void testGuardarCita_DadoTituloEspaciosVacios_RetornaError() {
+        AreaDTO areaDTO = areaMapper.areaToAreaDTO(area1);
+        ClienteDTO clienteDTO = clienteMapper.clienteToClienteDTO(cliente1);
+        CitaDTO citaDTO = new CitaDTO(1, clienteDTO, areaDTO, "     ", "2024-10-12 12:00:00", "2024-10-12 13:00:00", "A");
+
+        assertThrows(CitaException.class, () -> service.guardar(citaDTO));
+    }
+
+    @Test
+    public void testGuardarCita_DadoTituloIsBlank_RetornaError() {
+        AreaDTO areaDTO = areaMapper.areaToAreaDTO(area1);
+        ClienteDTO clienteDTO = clienteMapper.clienteToClienteDTO(cliente1);
+        CitaDTO citaDTO = new CitaDTO(1, clienteDTO, areaDTO, "", "2024-10-12 12:00:00", "2024-10-12 13:00:00", "A");
+
+        assertThrows(CitaException.class, () -> service.guardar(citaDTO));
+    }
+
+    @Test
+    public void testGuardarCita_DadoTituloIsNull_RetornaError() {
+        AreaDTO areaDTO = areaMapper.areaToAreaDTO(area1);
+        ClienteDTO clienteDTO = clienteMapper.clienteToClienteDTO(cliente1);
+        CitaDTO citaDTO = new CitaDTO(1, clienteDTO, areaDTO, null, "2024-10-12 12:00:00", "2024-10-12 13:00:00", "A");
+
+        assertThrows(CitaException.class, () -> service.guardar(citaDTO));
+    }
+
     @Test
     public void testListar_RetornaCitas() {
         when(repository.findAll()).thenReturn(Arrays.asList(cita1, cita2));
@@ -109,7 +192,7 @@ public class CitaServiceImplTest {
     }
 
     @Test
-    public void testListarCitasPorClienteId_DadoIdValido_RetornaCitas() {
+    public void testListarCitasPorCliente_DadoIdValido_RetornaCitas() {
         int clienteId = 1;
         when(repository.findCitasByClienteId(clienteId)).thenReturn(Arrays.asList(cita1));
 
@@ -119,13 +202,13 @@ public class CitaServiceImplTest {
     }
 
     @Test
-    public void testListarCitasPorClienteId_DadoIdMenorZero_RetornaError() {
+    public void testListarCitasPorCliente_DadoIdMenorZero_RetornaError() {
         int clienteId = -1;
         assertThrows(CitaException.class, () -> service.listarCitasPorCliente(clienteId, ""));
     }
 
     @Test
-    public void testListarCitasPorClienteId_DadoIdIgualZero_RetornaError() {
+    public void testListarCitasPorCliente_DadoIdIgualZero_RetornaError() {
         int clienteId = 0;
         assertThrows(CitaException.class, () -> service.listarCitasPorCliente(clienteId, ""));
     }

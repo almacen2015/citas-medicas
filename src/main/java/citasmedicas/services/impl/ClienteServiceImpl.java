@@ -77,7 +77,8 @@ public class ClienteServiceImpl implements ClienteService {
         return clienteActualizar;
     }
 
-    private void validarDatos(ClienteDTO clienteDTO) {
+    @Override
+    public void validarDatos(ClienteDTO clienteDTO) {
         String nombre = clienteDTO.nombre();
         String apellidoPaterno = clienteDTO.apellidoPaterno();
         String apellidoMaterno = clienteDTO.apellidoMaterno();
@@ -92,7 +93,7 @@ public class ClienteServiceImpl implements ClienteService {
         validarFechaNacimiento(clienteDTO);
     }
 
-    private static void validarIdCliente(Integer id) {
+    private void validarIdCliente(Integer id) {
         if (id == null || id <= 0) {
             throw new ClienteException(ClienteException.ID_NO_VALIDO);
         }

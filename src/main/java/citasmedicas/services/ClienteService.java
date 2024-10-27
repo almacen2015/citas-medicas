@@ -15,4 +15,6 @@ public interface ClienteService {
     ClienteDTO actualizar(ClienteDTO clienteDTO, Integer id);
 
     void eliminar(Integer id);
+
+    void validarDatos(ClienteDTO clienteDTO);
 }
