@@ -9,6 +9,7 @@ import citasmedicas.models.entities.Area;
 import citasmedicas.models.entities.Cita;
 import citasmedicas.models.entities.Cliente;
 import citasmedicas.models.mappers.AreaMapper;
+import citasmedicas.models.mappers.CitaMapper;
 import citasmedicas.models.mappers.ClienteMapper;
 import citasmedicas.repositories.CitaRepository;
 import citasmedicas.services.AreaService;
@@ -58,8 +59,8 @@ public class CitaServiceImplTest {
     Area area2;
 
     private AreaMapper areaMapper = AreaMapper.INSTANCE;
-
     private ClienteMapper clienteMapper = ClienteMapper.INSTANCE;
+    private CitaMapper citaMapper = CitaMapper.INSTANCE;
 
     @BeforeEach
     void setUp() {
@@ -111,7 +112,19 @@ public class CitaServiceImplTest {
         repository.save(cita2);
     }
 
-    //TODO REVISAR SI LAS VALIDACIONES POR EJEM ID O DATOS SEAN PUBLICOS O PRIVADOS
+    @Test
+    public void testGuardarCita_DadoFechaInicioEsMismo_RetornaError() {
+        AreaDTO areaDTO = areaMapper.areaToAreaDTO(area1);
+        ClienteDTO clienteDTO = clienteMapper.clienteToClienteDTO(cliente2);
+        CitaDTO citaDTO = new CitaDTO(1, clienteDTO, areaDTO, "Hola", "2024-11-11 09:00:00", "2024-10-12 13:00:00", "A");
+
+        Cita cita = citaMapper.citaDTOToCita(citaDTO);
+
+        when(repository.findByClienteIdAndAreaIdAndFechaInicio(clienteDTO.id(), areaDTO.id(), cita.getFechaInicio())).thenReturn(Arrays.asList(cita));
+
+        assertThrows(CitaException.class, () -> service.guardar(citaDTO));
+
+    }
 
     @Test
     public void testGuardarCita_DadoAreaNoValida_RetornaError() {

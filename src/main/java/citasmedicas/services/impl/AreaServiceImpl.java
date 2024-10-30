@@ -47,6 +47,10 @@ public class AreaServiceImpl implements AreaService {
                 || nombre.length() > MAX_LENGHT_NOMBRE) {
             throw new AreaException(AreaException.NOMBRE_NO_VALIDO);
         }
+
+        if(repository.findByNombre(nombre).isPresent()) {
+            throw new AreaException(AreaException.NOMBRE_EXISTE);
+        }
     }
 
     private void validarDatosActualizar(AreaDTO areaDTO) {

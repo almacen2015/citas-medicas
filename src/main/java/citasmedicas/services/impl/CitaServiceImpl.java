@@ -120,11 +120,8 @@ public class CitaServiceImpl implements CitaService {
     public LocalDateTime convertAndValidateDate(String dateStr) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         try {
-            // Intentar parsear la fecha
             return LocalDateTime.parse(dateStr, formatter);
         } catch (DateTimeParseException e) {
-            // Si la fecha no es válida, lanzar una excepción o manejar el error
-            System.out.println("Fecha no válida: " + dateStr);
             return null;
         }
     }
