@@ -29,7 +29,7 @@ public class AreaController {
     @Operation(summary = "Lista todas las areas", description = "Lista todas las areas")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(type = "array", implementation = AreaDTO.class)))})
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<List<AreaDTO>> listar() {
         return new ResponseEntity<>(service.listar(), HttpStatus.OK);
     }
@@ -39,7 +39,12 @@ public class AreaController {
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/{id}")
     public ResponseEntity<AreaDTO> obtenerAreaPorId(@PathVariable Integer id) {
-        return new ResponseEntity<>(service.obtenerPorId(id), HttpStatus.OK);
+        AreaDTO areaEncontrada = service.obtenerPorId(id);
+        if (areaEncontrada != null) {
+            return new ResponseEntity<>(areaEncontrada, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @Operation(summary = "Guarda un área", description = "Guarda un área")
