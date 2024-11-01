@@ -49,8 +49,8 @@ public class AreaController {
 
     @Operation(summary = "Guarda un área", description = "Guarda un área")
     @ApiResponses(value = {@ApiResponse(responseCode = "201", content = @Content(schema = @Schema(type = "array", implementation = AreaDTO.class)))})
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PostMapping("")
     public ResponseEntity<AreaDTO> guardar(@RequestBody AreaDTO areaDTO) {
         return new ResponseEntity<>(service.guardar(areaDTO), HttpStatus.CREATED);
     }
