@@ -39,14 +39,24 @@ public class TipoEmpleadoController {
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/buscar-id/{id}")
     public ResponseEntity<TipoEmpleadoDTO> buscarPorId(@PathVariable Integer id) {
-        return new ResponseEntity<>(service.buscarPorId(id), HttpStatus.FOUND);
+        TipoEmpleadoDTO tipoEmpleadoEncontrado = service.buscarPorId(id);
+        if (tipoEmpleadoEncontrado != null) {
+            return new ResponseEntity<>(tipoEmpleadoEncontrado, HttpStatus.FOUND);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 
     @Operation(summary = "Busca un tipo de empleado por su nombre", description = "Recibe el nombre de un tipo de empleado")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/buscar-nombre/{nombre}")
     public ResponseEntity<TipoEmpleadoDTO> buscarPorNombre(@PathVariable String nombre) {
-        return new ResponseEntity<>(service.buscarPorNombre(nombre), HttpStatus.FOUND);
+        TipoEmpleadoDTO encontrado = service.buscarPorNombre(nombre);
+        if (encontrado != null) {
+            return new ResponseEntity<>(encontrado, HttpStatus.FOUND);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 
     @Operation(summary = "Elimina un tipo de empleado", description = "Recibe un tipo de empleado")
