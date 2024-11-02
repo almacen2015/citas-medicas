@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,6 +29,7 @@ public class ClienteController {
                     schema = @Schema(type = "array", implementation = ClienteDTO.class))
             )
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping
     public ResponseEntity<?> listar() {
         return new ResponseEntity<>(service.listar(), HttpStatus.OK);
@@ -39,6 +41,7 @@ public class ClienteController {
                     schema = @Schema(type = "array", implementation = ClienteDTO.class))
             )
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping
     public ResponseEntity<?> guardar(@RequestBody ClienteDTO clienteDTO) {
         return new ResponseEntity<>(service.guardar(clienteDTO), HttpStatus.CREATED);
@@ -51,6 +54,7 @@ public class ClienteController {
                     schema = @Schema(type = "void", implementation = void.class))
             )
     })
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Integer id) {
         service.eliminar(id);
@@ -64,6 +68,7 @@ public class ClienteController {
                     schema = @Schema(type = "array", implementation = ClienteDTO.class))
             )
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizar(@RequestBody ClienteDTO clienteDTO, @PathVariable Integer id) {
         return new ResponseEntity<>(service.actualizar(clienteDTO, id), HttpStatus.OK);
@@ -76,6 +81,7 @@ public class ClienteController {
                     schema = @Schema(type = "array", implementation = ClienteDTO.class))
             )
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerCliente(@PathVariable Integer id) {
         return new ResponseEntity<>(service.obtenerClientePorId(id), HttpStatus.OK);
